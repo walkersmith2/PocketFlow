@@ -1,0 +1,52 @@
+header {
+  display: flex;
+  padding: 0 1rem;
+  /* border: 1px solid red; */
+  width: auto;
+}
+
+#header-buttons-ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#header-buttons-ul li {
+  padding: 0.2rem;
+}
+
+main {
+  max-width: 700px;
+  width: 90vw;
+  align-self: center;
+  /* border: 1px solid red; */
+}
+
+#add-entry-btn {
+  width: 100%;
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.add-entry-form {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid red;
+  flex-wrap: wrap;
+  padding: 0.8rem;
+}
+
+#expenses-ul {
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+#expenses-ul li {
+  margin: 0.5rem 0;
+  /* border: 1px solid red; */
+}

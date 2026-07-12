@@ -1,0 +1,46 @@
+.expenseCard {
+    display: flex;
+    text-align: center;
+    justify-content:space-between;
+    border: 0.1rem solid white; 
+    border-radius: 1rem;
+    padding: 0.5rem;
+    /* width: fit-content; */
+
+    .textDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        /* border: 1px solid red; */
+        padding: 0.5rem;
+    }
+
+    .subtitleDiv {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        /* border: 1px solid red; */
+    }
+
+    .subtitleDiv p {
+        padding: 0.1rem;
+        /* border: 1px solid red; */
+    }
+
+    .btnDiv {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        /* border: 1px solid red; */
+        padding: 0.5rem;
+    }
+
+    .btnDiv button {
+        height: fit-content;
+        width: auto;
+        padding: 0.5rem;
+        margin: 0.2rem;
+    }
+}
