@@ -23,20 +23,27 @@ main {
   /* border: 1px solid red; */
 }
 
-#add-entry-btn {
+.add-expense-btn {
   width: 100%;
   border-radius: 1rem;
   padding: 1rem;
+  margin: 1rem 0;
   font-size: 1.5rem;
 }
 
-.add-entry-form {
-  width: auto;
+.add-expense-form {
   display: flex;
+  width: auto;
   flex-direction: row;
-  border: 1px solid red;
+  border: 0.1rem solid white; 
+  /* border: 1px solid red; */
+  border-radius: 1rem;
   flex-wrap: wrap;
   padding: 0.8rem;
+}
+
+.add-expense-form * {
+  margin: 0.5rem;
 }
 
 #expenses-ul {

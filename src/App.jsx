@@ -1,37 +1,67 @@
 import { useState } from 'react'
 import './App.css'
 import ExpenseCard from './components/ExpenseCard'
-import AddEntryForm from './components/AddEntryForm'
-import AddIcon from './assets/add-icon.svg?react';
+import AddExpenseComponent from './components/AddExpenseComponent'
 import PersonIcon from './assets/person-icon.svg?react';
 
+
 function App() {
+  
   const [expenses, setExpenses] = useState([
     {
+      id: 0,
       amount: 17.02,
       description: "McDonald's",
       category: "Food & Drink",
       date: "Jul 9",
     },
     {
+      id: 1,
       amount: 42,
       description: "Cheesecake Factory",
       category: "Food & Drink",
       date: "Jul 11",
     },
     {
+      id: 2,
       amount: 13,
       description: "Dodger Dog",
       category: "Food & Drink",
       date: "Jul 11",
     },
     {
+      id: 3,
       amount: 60,
       description: "Six Flags",
       category: "Entertainment",
       date: "Jul 12",
     }
   ])
+
+  const [nextUID, setNextUID] = useState(4);
+  
+  function getNextUID() {
+    const currentUID = nextUID;
+    setNextUID(nextUID + 1);
+    return currentUID;
+  }
+
+  function deleteExpense(expenseId) {
+    setExpenses(expenses.filter((expense) => expense.id != expenseId));
+  }
+
+  function addExpense(amount, date, description, category) {
+    setExpenses([...expenses, 
+      {
+        id: getNextUID(),
+        amount: parseFloat(amount),
+        date: date,
+        description: description,
+        category: category
+      }
+    ]);
+  }
+
 
   return (
     <>
@@ -47,12 +77,11 @@ function App() {
         </ul>
       </header>
       <main>
+        <AddExpenseComponent addExpense={addExpense}/>
         <ul id="expenses-ul">
-          <button id="add-entry-btn"><AddIcon /> Add Entry</button>
-          <AddEntryForm />
           {expenses.map((expense, index) => (
             <li key={index}>
-              <ExpenseCard amount={expense.amount} date={expense.date} description={expense.description} category={expense.category} />
+              <ExpenseCard expense={expense} deleteExpense={deleteExpense}/>
             </li>
           ))}
         </ul>
