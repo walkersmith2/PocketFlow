@@ -1,11 +1,13 @@
 .expenseCard {
+    background-color: rgba(255,255,225, 0.1);
     display: flex;
     text-align: center;
     justify-content:space-between;
-    border: 0.1rem solid white; 
-    border-radius: 1rem;
+    /* border: 0.1rem solid white;  */
+    border-radius: 0.5rem;
     padding: 0.5rem;
-    /* width: fit-content; */
+    margin: 1rem 0;
+    box-shadow: 0 0.5rem 2rem 1rem rgba(0,0,0,0.1);
 
     .textDiv {
         display: flex;
@@ -38,6 +40,7 @@
     }
 
     .btnDiv button {
+        border-radius: 0.5rem;
         padding: 0.5rem;
         margin: 0.2rem;
         /* border: 1px solid red; */
