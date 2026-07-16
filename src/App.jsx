@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
 import './App.css';
 import ExpenseCard from './components/ExpenseCard';
 import AddExpenseComponent from './components/AddExpenseComponent';
+
 import PieChart from './components/PieChart';
 import PersonIcon from './assets/person-icon.svg?react';
 
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+)
+
 function App() {
   
-  const [expenses, setExpenses] = useState([
+  const hardCodedData = [
     {
       id: 0,
       amount: 17.02,
@@ -57,9 +65,25 @@ function App() {
       category: "Rent/Utilities",
       date: new Date("2026-07-05"),
     }
-  ])
+  ];
+
+  const [expenses, setExpenses] = useState([]);
 
   const [nextUID, setNextUID] = useState(6);
+
+  useEffect(() => {
+    getExpenses()
+  }, []);
+
+  async function getExpenses() {
+    const { data, error } = await supabase.from('expenses').select();
+    if (error) {
+      console.error(error);
+      return;
+    }
+    console.log(data);
+    setExpenses(data);
+  }
 
   function getNextUID() {
     const currentUID = nextUID;

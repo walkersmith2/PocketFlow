@@ -38,7 +38,6 @@ export default function PieChart({ expenses }) {
       return;
     }
     expenses.forEach((expense) => categories[expense.category] = (categories[expense.category] || 0) + expense.amount)
-    console.log(categories);
     const categoriesArr = Object.keys(categories);
     const numArr = Object.values(categories);
     const data = {
