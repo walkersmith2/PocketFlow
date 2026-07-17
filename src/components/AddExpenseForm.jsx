@@ -31,7 +31,8 @@ export default function AddExpenseForm({ setIsVisible, addExpense, expense}) {
             </label>
             <label>
                 Date:
-                <input name="date" defaultValue={expense?.date?.toLocaleDateString('en-CA') ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required />
+                {/* <input name="date" defaultValue={expense?.date?.toLocaleDateString('en-CA') ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required /> */}
+                <input name="date" defaultValue={expense?.date ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required />
             </label>
             <label>
                 Description:

@@ -91,37 +91,55 @@ function App() {
     return currentUID;
   }
 
-  function deleteExpense(expenseId) {
-    setExpenses(expenses.filter((expense) => expense.id != expenseId));
+  async function deleteExpense(expenseId) {
+    const response = await supabase.from('expenses').delete().eq('id',expenseId);
+    // if (error) {
+    //   console.error(error);
+    //   return;
+    // }
+    getExpenses();
+    console.log("delete")
+    // setExpenses(expenses.filter((expense) => expense.id != expenseId));
   }
 
-  function addExpense(id, amount, date, description, category) {
-    if(expenses.some(expense => expense.id == id)) {
-      // Replace existing expense based on id
-      const index = expenses.findIndex((expense, index) => expense.id == id);
-      setExpenses([...expenses.slice(0,index), 
-        {
-          id: id,
-          amount: amount,
-          date: date,
-          description: description,
-          category: category
-        },
-        ...expenses.slice(index + 1)]
-      );
+  async function addExpense(id, amount, date, description, category) {
+    const row = id == -1 ? {amount: amount, date: date, description: description, category: category} :
+    {id: id, amount: amount, date: date, description: description, category: category};
+    const { data, error } = await supabase.from('expenses').upsert(row);
+
+    if (error) {
+      console.error(error);
+      return;
     }
-    else {
-      // Add new expense to expenses array
-      setExpenses([...expenses, 
-        {
-          id: getNextUID(),
-          amount: amount,
-          date: date,
-          description: description,
-          category: category
-        }
-      ]);
-    }
+    getExpenses();
+    console.log("upsert")
+
+    // if(expenses.some(expense => expense.id == id)) {
+    //   // Replace existing expense based on id
+    //   const index = expenses.findIndex((expense, index) => expense.id == id);
+    //   setExpenses([...expenses.slice(0,index), 
+    //     {
+    //       id: id,
+    //       amount: amount,
+    //       date: date,
+    //       description: description,
+    //       category: category
+    //     },
+    //     ...expenses.slice(index + 1)]
+    //   );
+    // }
+    // else {
+    //   // Add new expense to expenses array
+    //   setExpenses([...expenses, 
+    //     {
+    //       id: getNextUID(),
+    //       amount: amount,
+    //       date: date,
+    //       description: description,
+    //       category: category
+    //     }
+    //   ]);
+    // }
   }
 
 
