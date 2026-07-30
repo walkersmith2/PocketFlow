@@ -1,12 +1,26 @@
+.expenseCardContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 1rem 0;
+}
+
+.colorLabel {
+    width: 1rem;
+    /* height: 50px; */
+    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: rgb(152, 57, 57);
+}
+
 .expenseCard {
     background-color: rgba(255,255,225, 0.1);
     display: flex;
     text-align: center;
     justify-content:space-between;
     /* border: 0.1rem solid white;  */
-    border-radius: 0.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
     padding: 0.5rem;
-    margin: 1rem 0;
+    
     box-shadow: 0 0.5rem 2rem 1rem rgba(0,0,0,0.1);
 
     .textDiv {
@@ -41,8 +55,16 @@
 
     .btnDiv button {
         border-radius: 0.5rem;
-        padding: 0.5rem;
+        padding: 0.8rem;
         margin: 0.2rem;
-        /* border: 1px solid red; */
+        border: 0;
+    }
+
+    .btnDiv button:hover {
+        background-color: rgb(166, 166, 166);
+    }
+
+    .btnDiv .deleteBtn {
+        background-color: rgb(204, 29, 29);
     }
 }

@@ -71,7 +71,6 @@ function PieChart({ expenses }) {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,    
   };
 
   return (

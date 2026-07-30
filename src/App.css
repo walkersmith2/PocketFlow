@@ -1,8 +1,8 @@
 .homepage-container {
   border: 1px solid blue;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
 }
-
 
 header {
   display: flex;
@@ -13,9 +13,31 @@ header {
   padding: 0 1rem 1rem 1rem;
   width: auto;
   background-color: #16171d;
-  position: sticky;
-  top: 0;
   /* border: 1px solid red; */
+}
+
+.homepage-main {
+  width: 95%;
+  max-width: 1200px;
+  height: 85vh;
+  margin: auto;
+  align-self: center;
+  display: grid;
+  grid-template-columns: min-content auto;
+  border: 1px solid yellow;
+}
+
+footer {
+  padding: 1rem 0;
+}
+
+button {
+  border: 0;
+  background-color: rgb(63, 63, 63);
+}
+
+button:hover {
+  background-color: rgb(132, 132, 132);
 }
 
 .header-btn {
@@ -28,7 +50,6 @@ header {
   justify-content: center;
   flex-direction: row;
   flex-wrap: nowrap;
-  /* border: 1px solid red; */
 }
 
 .account-btn > * {
@@ -46,48 +67,40 @@ header {
   padding: 0.2rem;
 }
 
-main {
-  width: 95%;
-  height: 100%;
-  align-self: center;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid yellow;
-}
-
 .pie-chart-container {
   position: relative;
-  width: 600px;
-  height: 500px;
+  width: 100%;
+  height: 50%;
   border: 1px solid red;
 }
 
 .expense-cards-container {
-  border: 1px solid red;
-  height: 100%;
+  border: 1px solid violet;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 800px;
 }
 
 .add-expense-btn {
   width: 100%;
-  border-radius: 0.5rem;
+  border-radius: 0.5rem 0.5rem 0 0 ;
   padding: 1rem;
-  margin: 1rem 0;
+  /* margin: 1rem 0; */
   font-size: 1.5rem;
   font-weight: bold;
-  background-color: green;
+  background-color: rgb(122, 122, 122);
 }
 
 .add-expense-form {
   display: flex;
   flex-direction: column;
   width: auto;
-  border: 0.1rem solid white; 
-  /* border: 1px solid red; */
-  border-radius: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0.8rem;
+  background-color: rgba(255,255,225, 0.1);
+  border-radius: 0 0 0.5rem 0.5rem;
+  flex-wrap: nowrap;
+  /* padding: 0.8rem; */
 }
-
 
 .add-expense-form > * {
   margin: 0.5rem;
@@ -121,21 +134,14 @@ main {
 
 .expenses-ul {
   list-style: none;
-  padding: 0;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
-  height: 100%;
+  padding: 0 1rem;
+  border: 1px solid rgb(190, 190, 190);
+  border-radius: 0.5rem;
+  /* box-shadow: inset 0 1rem 1rem 1rem rgba(0,0,0,1); */
+  flex-grow: 1;
   overflow-y: scroll;
-}
-
-.expenses-ul li {
-  margin: 0.5rem 0;
-  
-}
-
-footer {
-  padding: 1rem 0;
 }
 
 .login-form, .signup-form, .reset-password-form {

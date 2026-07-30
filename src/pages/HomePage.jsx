@@ -71,29 +71,7 @@ function HomePage() {
           </li>
         </ul>
       </header>
-      <main>
-        <form className="filter-form">
-          <h2>Filter by date range</h2>
-          <label>
-            <input name="filter-date-range" type="radio"></input>
-            Current Week
-          </label>
-          <label>
-            <input name="filter-date-range" type="radio"></input>
-            Current Month
-          </label>
-          <label>
-            <input name="filter-date-range" type="radio"></input>
-            Current Year
-          </label>
-          <label>
-            <input name="filter-date-range" type="radio"></input>
-            All Time
-          </label>
-        </form>
-        <div className="pie-chart-container">
-          <PieChart expenses={expenses}/>
-        </div>
+      <main className="homepage-main">
         <div className="expense-cards-container">
           <AddExpenseComponent addExpense={addExpense}/>
           <ul className="expenses-ul">
@@ -107,6 +85,30 @@ function HomePage() {
               <li>No expenses yet! Click the <strong>New Expense</strong> button to add an expense.</li>
             }
           </ul>
+        </div>
+        <div className="chart-view-container">
+          <div className="pie-chart-container">
+            <PieChart expenses={expenses}/>
+          </div>
+          <form className="filter-form">
+            <h2>Filter by date range</h2>
+            <label>
+              <input name="filter-date-range" type="radio"></input>
+              Current Week
+            </label>
+            <label>
+              <input name="filter-date-range" type="radio"></input>
+              Current Month
+            </label>
+            <label>
+              <input name="filter-date-range" type="radio"></input>
+              Current Year
+            </label>
+            <label>
+              <input name="filter-date-range" type="radio"></input>
+              All Time
+            </label>
+          </form>
         </div>
       </main>
       <footer>
