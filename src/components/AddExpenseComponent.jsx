@@ -3,7 +3,7 @@ import AddIcon from '../assets/add-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
 
-export default function AddExpenseComponent({ addExpense }) {
+function AddExpenseComponent({ addExpense }) {
     const [isFormVisible, setIsFormVisible] = useState(false);
     function handleBtnClick() {
         setIsFormVisible(!isFormVisible);
@@ -18,3 +18,5 @@ export default function AddExpenseComponent({ addExpense }) {
         </div>
     );
 }
+
+export default AddExpenseComponent;

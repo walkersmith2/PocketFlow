@@ -1,3 +1,9 @@
+.homepage-container {
+  border: 1px solid blue;
+  height: 100%;
+}
+
+
 header {
   display: flex;
   flex-direction: row;
@@ -41,13 +47,24 @@ header {
 }
 
 main {
-  max-width: 700px;
-  width: 90vw;
+  width: 95%;
+  height: 100%;
   align-self: center;
-  display: flex;
-  flex-direction: column;
-  /* flex-wrap: wrap; */
-  /* border: 1px solid red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid yellow;
+}
+
+.pie-chart-container {
+  position: relative;
+  width: 600px;
+  height: 500px;
+  border: 1px solid red;
+}
+
+.expense-cards-container {
+  border: 1px solid red;
+  height: 100%;
 }
 
 .add-expense-btn {
@@ -102,23 +119,24 @@ main {
   background-color: red;
 }
 
-#expenses-ul {
+.expenses-ul {
   list-style: none;
   padding: 0;
   justify-content: center;
   align-items: center;
+  border: 1px solid red;
+  height: 100%;
+  overflow-y: scroll;
 }
 
-#expenses-ul li {
+.expenses-ul li {
   margin: 0.5rem 0;
-  /* border: 1px solid red; */
+  
 }
-
 
 footer {
   padding: 1rem 0;
 }
-
 
 .login-form, .signup-form, .reset-password-form {
   border: 1px solid rgba(255,255,255,0.3);
@@ -166,4 +184,12 @@ footer {
     flex-direction: column;
     align-items: start;
   }
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+  align-items: start;
+  width: fit-content;
 }

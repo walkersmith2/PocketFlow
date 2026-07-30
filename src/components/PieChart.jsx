@@ -30,7 +30,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 //   ],
 // };
 
-export default function PieChart({ expenses }) {
+function PieChart({ expenses }) {
   function getDataObject() {
     let categories = {};
     let total = 0;
@@ -69,7 +69,14 @@ export default function PieChart({ expenses }) {
     return data;
   }
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,    
+  };
+
   return (
-    <Pie data={getDataObject()} />
-  )
+    <Pie data={getDataObject()} options={options} />
+  );
 }
+
+export default PieChart;

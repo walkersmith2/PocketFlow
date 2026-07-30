@@ -32,6 +32,11 @@ function SignUpPage() {
         e.preventDefault();
         setError('');
 
+        if(password !== confirmPassword) {
+            setError("Passwords must match.");
+            return;
+        }
+
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,

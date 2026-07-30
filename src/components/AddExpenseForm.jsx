@@ -1,6 +1,6 @@
 
 // Takes optional expense prop in case the form is being used to edit an existing expense
-export default function AddExpenseForm({ setIsVisible, addExpense, expense}) {
+function AddExpenseForm({ setIsVisible, addExpense, expense}) {
     function handleCancel() {
         setIsVisible(false);
     }
@@ -53,5 +53,7 @@ export default function AddExpenseForm({ setIsVisible, addExpense, expense}) {
                 <button className="cancel-expense-submit-btn" type="button" onClick={handleCancel}>Cancel</button>
             </div>
         </form>
-    )
+    );
 }
+
+export default AddExpenseForm;

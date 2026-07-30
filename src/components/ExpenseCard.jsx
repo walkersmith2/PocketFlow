@@ -4,7 +4,7 @@ import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
-export default function ExpenseCard({ expense, addExpense, deleteExpense }) {
+function ExpenseCard({ expense, addExpense, deleteExpense }) {
     const [isEditable, setIsEditable] = useState(false);
     
     function handleEdit() {
@@ -25,6 +25,7 @@ export default function ExpenseCard({ expense, addExpense, deleteExpense }) {
             <div className={styles.textDiv}>
                 <h2 >${expense.amount.toFixed(2)}</h2>
                 <div className={styles.subtitleDiv}>
+                    <p>user_id: {expense.user_id}</p>
                     <p>id: {expense.id}</p>
                     <p >{new Date(expense.date).toLocaleDateString('en-us', { month: 'short', day: 'numeric' })}</p>
                     <p >{expense.description}</p>
@@ -39,3 +40,5 @@ export default function ExpenseCard({ expense, addExpense, deleteExpense }) {
         </>
     )
 }
+
+export default ExpenseCard;

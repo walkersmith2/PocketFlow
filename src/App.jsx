@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import ResetPasswordPageRedirect from './pages/ResetPasswordPageRedirect';
 import HomePage from './pages/HomePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -12,6 +13,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/reset-password-redirect" element={<ResetPasswordPageRedirect />} />
       <Route path="/"
         element={
           <ProtectedRoute>
