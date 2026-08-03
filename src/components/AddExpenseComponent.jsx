@@ -12,9 +12,7 @@ function AddExpenseComponent({ addExpense }) {
     return (
         <div className="add-expense-component">
             <button className="add-expense-btn" onClick={handleBtnClick}><AddIcon /> New Expense</button>
-            {isFormVisible && (
-               <AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense}/>
-            )}
+            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense}/>) : <div className="add-expense-form-minimized"></div>}
         </div>
     );
 }

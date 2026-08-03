@@ -6,15 +6,17 @@ import { supabase } from '../supabaseClient';
 import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
+import FilterBar from '../components/FilterBar';
 import PersonIcon from '../assets/person-icon.svg?react';
 
 
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
-  const [dateFilter, setDateFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState(["Food & Drink", "Entertainment", "Rent/Utilities"]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
+  const [dateFilter, setDateFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState(new Set(["Food & Drink", "Entertainment", "Rent/Utilities"]));
+  const [amountFilter, setAmountFilter] = useState(1000000);
   const { session } = useAuth();
   const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ function HomePage() {
     getExpenses();
   }, []);
 
-  useEffect(updateVisibleExpenses,[expenses, dateFilter]);
+  useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter]);
 
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
@@ -51,7 +53,7 @@ function HomePage() {
       return;
     }
     getExpenses();
-    console.log("upsert")
+    console.log("upsert");
   }
 
   async function handleLogout() {
@@ -60,9 +62,11 @@ function HomePage() {
   }
 
   function updateVisibleExpenses() {
-    const today = new Date();
+    let filteredExpenses = [...expenses];
 
-    setVisibleExpenses(expenses.filter((expense) => {
+    // Apply date filter
+    const today = new Date();
+    filteredExpenses = filteredExpenses.filter((expense) => {
       const expenseDate = new Date(expense.date + "T00:00:00");
 
       if(dateFilter == "week") {
@@ -79,11 +83,15 @@ function HomePage() {
         return expenseDate.getFullYear() === today.getFullYear();
       }
       return true;
-    }));
-  }
+    });
 
-  function handleDateFilterChange(e) {
-    setDateFilter(e.target.value);
+    // Apply category filter
+    filteredExpenses = filteredExpenses.filter((expense) => categoryFilter.has(expense.category));
+
+    // Apply amount filter
+    filteredExpenses = filteredExpenses.filter((expense) => parseFloat(expense.amount) < amountFilter);
+
+    setVisibleExpenses(filteredExpenses);
   }
 
   return (
@@ -118,30 +126,13 @@ function HomePage() {
           </ul>
         </div>
         <div className="chart-view-container">
+          <div className="amount-total-container">
+            <p>Total: ${expenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}</p>
+          </div>
           <div className="pie-chart-container">
             <PieChart expenses={visibleExpenses}/>
           </div>
-          <form className="filter-form">
-            <fieldset>
-              <h2>Filter by date range</h2>
-              <label>
-                <input name="filter-date-range" type="radio" value="week" checked={dateFilter === "week"} onChange={handleDateFilterChange}></input>
-                Current Week
-              </label>
-              <label>
-                <input name="filter-date-range" type="radio" value="month" checked={dateFilter === "month"} onChange={handleDateFilterChange}></input>
-                Current Month
-              </label>
-              <label>
-                <input name="filter-date-range" type="radio" value="year" checked={dateFilter === "year"} onChange={handleDateFilterChange}></input>
-                Current Year
-              </label>
-              <label>
-                <input name="filter-category" type="checkbox"  value="Food & Drink" checked={dateFilter === "all"} onChange={handleDateFilterChange}></input>
-                All Time
-              </label>
-            </fieldset>
-          </form>
+          <FilterBar expenses={expenses} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
         </div>
       </main>
       <footer>

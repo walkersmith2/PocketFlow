@@ -72,6 +72,9 @@ button:hover {
   width: 100%;
   height: 50%;
   border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .expense-cards-container {
@@ -92,6 +95,13 @@ button:hover {
   background-color: rgb(122, 122, 122);
 }
 
+.add-expense-form-minimized {
+  background-color: rgba(255,255,225, 0.1);
+  width: 100%;
+  height: 2rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
 .add-expense-form {
   display: flex;
   flex-direction: column;
@@ -99,7 +109,7 @@ button:hover {
   background-color: rgba(255,255,225, 0.1);
   border-radius: 0 0 0.5rem 0.5rem;
   flex-wrap: nowrap;
-  /* padding: 0.8rem; */
+  padding: 0.8rem;
 }
 
 .add-expense-form > * {
@@ -204,3 +214,7 @@ button:hover {
   width: fit-content;
 }
 
+.amount-total-container {
+  padding: 1rem;
+  font-size: 2rem;
+}
