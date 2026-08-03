@@ -33,7 +33,7 @@ function ExpenseCard({ expense, addExpense, deleteExpense }) {
                 <div className={styles.textDiv}>
                     <h2 >${expense.amount.toFixed(2)}</h2>
                     <div className={styles.subtitleDiv}>
-                        <p >{new Date(expense.date).toLocaleDateString('en-us', { month: 'short', day: 'numeric' })}</p>
+                        <p >{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric' })}</p>
                         <p >{expense.description}</p>
                         <p >{expense.category}</p>
                     </div>

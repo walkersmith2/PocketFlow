@@ -40,7 +40,7 @@ function LoginPage() {
           Password
           <input name="password" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}></input>
         </label>
-        {error && <p>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
         <button className="login-btn" type="submit">Log In</button>
       </form>
       <p>
