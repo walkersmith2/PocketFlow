@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 
-function FilterBar({ expenses, visibleExpenses, setVisibleExpenses, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter}) {
+function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter}) {
 
   function handleDateFilterChange(e) {
     setDateFilter(e.target.value);
@@ -48,18 +48,12 @@ function FilterBar({ expenses, visibleExpenses, setVisibleExpenses, dateFilter, 
       </fieldset>
       <fieldset>
         <h2>Filter by category</h2>
-        <label>
-          <input name="filter-category" type="checkbox" value="Food & Drink" checked={categoryFilter.has("Food & Drink")} onChange={handleCategoryFilterChange}></input>
-          Food & Drink
-        </label>
-        <label>
-          <input name="filter-category" type="checkbox" value="Entertainment" checked={categoryFilter.has("Entertainment")} onChange={handleCategoryFilterChange}></input>
-          Entertainment
-        </label>
-        <label>
-          <input name="filter-category" type="checkbox" value="Rent/Utilities" checked={categoryFilter.has("Rent/Utilities")} onChange={handleCategoryFilterChange}></input>
-          Rent/Utilities
-        </label>
+        {categories.map((category) => (
+          <label key={category.id}>
+            <input name="filter-category" type="checkbox" value={category.category} checked={categoryFilter.has(category.category)} onChange={handleCategoryFilterChange}></input>
+            {category.category}
+          </label>
+        ))}
       </fieldset>
       <fieldset>
         <h2>Filter by amount</h2>

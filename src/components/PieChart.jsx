@@ -3,25 +3,18 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function PieChart({ expenses }) {
-  const CATEGORY_ORDER = ["Food & Drink", "Entertainment", "Rent/Utilities"];
-  const COLOR_MAP = {
-    "Food & Drink": 'rgba(255, 99, 132, 0.2)',
-    "Entertainment": 'rgba(54, 162, 235, 0.2)',
-    "Rent/Utilities": 'rgba(255, 206, 86, 0.2)',
-    "a": 'rgba(75, 192, 192, 0.2)',
-    "b": 'rgba(153, 102, 255, 0.2)',
-    "c": 'rgba(255, 159, 64, 0.2)',
-  };
+const COLOR_ALPHA = "33";
 
-  const BORDER_COLOR_MAP = {
-    "Food & Drink": 'rgba(255, 99, 132, 1)',
-    "Entertainment": 'rgba(54, 162, 235, 1)',
-    "Rent/Utilities": 'rgba(255, 206, 86, 1)',
-    "a": 'rgba(75, 192, 192, 1)',
-    "b": 'rgba(153, 102, 255, 1)',
-    "c": 'rgba(255, 159, 64, 1)',
-  };
+function PieChart({ expenses, categories }) {
+  const CATEGORY_ORDER = [];
+  const COLOR_MAP = {};
+  const BORDER_COLOR_MAP = {};
+  categories.forEach((category) => {
+    CATEGORY_ORDER.push(category.category);
+    COLOR_MAP[category.category] = category.color + COLOR_ALPHA;
+    BORDER_COLOR_MAP[category.category] = category.color;
+    console.log(CATEGORY_ORDER);
+  });
 
   function getDataObject() {
     if(!expenses) return;

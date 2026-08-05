@@ -13,15 +13,17 @@ import PersonIcon from '../assets/person-icon.svg?react';
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
   const [dateFilter, setDateFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState(new Set(["Food & Drink", "Entertainment", "Rent/Utilities"]));
+  const [categoryFilter, setCategoryFilter] = useState(new Set(categories));
   const [amountFilter, setAmountFilter] = useState(1000000);
   const { session } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     getExpenses();
+    getCategories();
   }, []);
 
   useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter]);
@@ -32,8 +34,18 @@ function HomePage() {
       console.error(error);
       return;
     }
-    console.log(data);
+    console.log("expenses: ", data);
     setExpenses(data);
+  }
+
+  async function getCategories() {
+    const { data, error } = await supabase.from('categories').select();
+    if (error) {
+      console.error(error);
+      return;
+    }
+    console.log("categories: ", data);
+    setCategories(data);
   }
 
   async function deleteExpense(expenseId) {
@@ -53,6 +65,23 @@ function HomePage() {
       return;
     }
     getExpenses();
+    console.log("upsert");
+  }
+
+
+  async function addCategory(category, color) {
+    if(categories.includes((row) => row.category === category)) {
+      return;
+    }
+    const row = {category: category, color: color};
+    const { data, error } = await supabase.from('categories').upsert(row);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+    getCategories();
+    console.log("color: ", color);
     console.log("upsert");
   }
 
@@ -112,13 +141,13 @@ function HomePage() {
       </header>
       <main className="homepage-main">
         <div className="expense-cards-container">
-          <AddExpenseComponent addExpense={addExpense}/>
+          <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory}/>
           <ul className="expenses-ul">
             {
               visibleExpenses.length > 0 ?
               visibleExpenses.map((expense, index) => (
                   <li key={expense.id}>
-                  <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense}/>
+                  <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory}/>
                   </li>
               )) :
               <li>No expenses yet! Click the <strong>New Expense</strong> button to add an expense.</li>
@@ -127,12 +156,12 @@ function HomePage() {
         </div>
         <div className="chart-view-container">
           <div className="amount-total-container">
-            <p>Total: ${expenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}</p>
+            <p>Total: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}</p>
           </div>
           <div className="pie-chart-container">
-            <PieChart expenses={visibleExpenses}/>
+            <PieChart expenses={visibleExpenses} categories={categories}/>
           </div>
-          <FilterBar expenses={expenses} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
+          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
         </div>
       </main>
       <footer>

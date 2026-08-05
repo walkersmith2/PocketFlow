@@ -4,13 +4,7 @@ import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
-const labelColors = {
-    'Food & Drink':  'rgba(255, 99, 132, 1)',
-    'Rent/Utilities': 'rgba(54, 162, 235, 1)',
-    'Entertainment':  'rgba(255, 206, 86, 1)',
-}
-
-function ExpenseCard({ expense, addExpense, deleteExpense }) {
+function ExpenseCard({ expense, addExpense, deleteExpense, categories, addCategory }) {
     const [isEditable, setIsEditable] = useState(false);
 
     function handleEdit() {
@@ -26,9 +20,9 @@ function ExpenseCard({ expense, addExpense, deleteExpense }) {
     return (
         <>
         {isEditable ? 
-        <AddExpenseForm setIsVisible={setIsEditable} addExpense={addExpense} expense={expense}/> :
+        <AddExpenseForm setIsVisible={setIsEditable} addExpense={addExpense} expense={expense} categories={categories}  addCategory={addCategory}/> :
         <div className={styles.expenseCardContainer}>
-            <div className={styles.colorLabel} style={{backgroundColor: labelColors[expense.category]}}></div>
+            <div className={styles.colorLabel} style={{backgroundColor: [categories.find(category => category.category === expense.category).color]}}></div>
             <div className={styles.expenseCard}>
                 <div className={styles.textDiv}>
                     <h2 >${expense.amount.toFixed(2)}</h2>

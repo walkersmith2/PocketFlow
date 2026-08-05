@@ -1,59 +1,65 @@
+import { useState } from 'react';
+import AddCategoryForm from './AddCategoryForm';
 
 // Takes optional expense prop in case the form is being used to edit an existing expense
-function AddExpenseForm({ setIsVisible, addExpense, expense}) {
-    function handleCancel() {
-        setIsVisible(false);
-    }
+function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCategory }) {
+  const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
 
-    function handleSubmit(formData) {
+  function handleCancel() {
+    setIsVisible(false);
+  }
 
-        const id = (parseFloat(formData.get("id")));
-        const amount = parseFloat(formData.get("amount"));
-        const date = new Date(formData.get("date"));
-        const description = formData.get("description");
-        const category = formData.get("category");
+  function handleSubmit(formData) {
+    const id = (parseFloat(formData.get("id")));
+    const amount = parseFloat(formData.get("amount"));
+    const date = new Date(formData.get("date"));
+    const description = formData.get("description");
+    const category = formData.get("category");
 
-        // console.log(amount);
-        // console.log(date);
-        // console.log(description);
-        // console.log(category);
+    addExpense(id, amount, date, description, category);
+    setIsVisible(false);
+  }
 
-        addExpense(id, amount, date, description, category);
-        setIsVisible(false);
-    }
+  function handleAddCategoryClick(e) {
+    e.preventDefault();
+    setIsAddCategoryFormVisible(prev => !prev);
+    console.log(isAddCategoryFormVisible);
+  }
 
-    return (
-        <form className="add-expense-form" action={handleSubmit}>
-            <input name="id" type="hidden" defaultValue={expense?.id ?? -1}></input>
-            <label>
-                Amount: $
-                <input name="amount"  defaultValue={expense?.amount ?? 0} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
-            </label>
-            <label>
-                Date:
-                {/* <input name="date" defaultValue={expense?.date?.toLocaleDateString('en-CA') ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required /> */}
-                <input name="date" defaultValue={expense?.date ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required />
-            </label>
-            <label>
-                Description:
-                <input name="description" defaultValue={expense?.description ?? ""} className="description-input" type="text" required />
-            </label>
-            
-            <label>Category: 
-                <select name="category" defaultValue={expense?.category ?? ""} className="category-select" required>
-                    <option value=""></option>
-                    <option value="Food & Drink">Food & Drink</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Rent/Utilities">Rent/Utilities</option>
-                </select>
-            </label>
-            
-            <div className="add-expense-submit-btn-div">
-                <button className="add-expense-submit-btn" type="submit">Add</button>
-                <button className="cancel-expense-submit-btn" type="button" onClick={handleCancel}>Cancel</button>
-            </div>
-        </form>
-    );
+  return (
+    <>
+      <form className="add-expense-form" action={handleSubmit}>
+        <input name="id" type="hidden" defaultValue={expense?.id ?? -1}></input>
+        <label>
+          <div className="amount-input-div">
+            $<input name="amount"  defaultValue={expense?.amount ?? 0} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
+          </div>
+          Amount
+        </label>
+        <label>
+          <input name="date" defaultValue={expense?.date ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required />
+          Date
+        </label>
+        <label>
+          <input name="description" defaultValue={expense?.description ?? ""} className="description-input" type="text" required />
+          Description
+        </label>
+          
+        <label>
+          <select name="category" defaultValue={expense?.category ?? ""} className="category-select" required>
+            { categories.map((category) => (<option key={category.id} value={category.category}>{category.category}</option>)) }
+          </select>
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+</button>
+          Category
+        </label>
+        <div className="add-expense-submit-btn-div">
+            <button className="add-expense-submit-btn" type="submit">Add</button>
+            <button className="cancel-expense-submit-btn" type="button" onClick={handleCancel}>Cancel</button>
+        </div>
+      </form>
+      {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} />}
+    </>
+  );
 }
 
 export default AddExpenseForm;
