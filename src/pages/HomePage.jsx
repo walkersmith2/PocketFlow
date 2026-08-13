@@ -6,6 +6,7 @@ import { supabase } from '../supabaseClient';
 import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
+import LineChart from '../components/LineChart';
 import FilterBar from '../components/FilterBar';
 import SortBar from '../components/SortBar';
 import PersonIcon from '../assets/person-icon.svg?react';
@@ -20,6 +21,7 @@ function HomePage() {
   const [categoryFilter, setCategoryFilter] = useState(new Set(categories.map((category) => category.category)));
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
+  const [isPieChartVisible, setIsPieChartVisible] = useState(false);
   const { session } = useAuth();
   const navigate = useNavigate();
 
@@ -149,6 +151,15 @@ function HomePage() {
     setVisibleExpenses(sortedExpenses);
   }
 
+  function handleChartToggleChange(e) {
+    if(isPieChartVisible) {
+      setIsPieChartVisible(false);
+    }
+    else {
+      setIsPieChartVisible(true);
+    }
+  }
+
   return (
     <div className="homepage-container">
       <header>
@@ -168,6 +179,7 @@ function HomePage() {
       <main className="homepage-main">
         <div className="expense-cards-container">
           <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory}/>
+          <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
           <ul className="expenses-ul">
             {
               visibleExpenses.length > 0 ?
@@ -176,7 +188,7 @@ function HomePage() {
                   <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory}/>
                   </li>
               )) :
-              <li>No expenses yet! Click the <strong>New Expense</strong> button to add an expense.</li>
+              <li>No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters under the chart.</li>
             }
           </ul>
         </div>
@@ -184,13 +196,14 @@ function HomePage() {
           <div className="amount-total-container">
             <p>Total: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}</p>
           </div>
-          <div className="pie-chart-container">
-            <PieChart expenses={visibleExpenses} categories={categories}/>
+          <label>
+            <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
+            Pie Chart View
+          </label>
+          <div className="chart-container">
+            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : <LineChart expenses={visibleExpenses} dateFilter={dateFilter}/>}
           </div>
-          <div className="filter-sort-div">
-            <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
-            <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
-          </div>
+          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
         </div>
       </main>
       <footer>

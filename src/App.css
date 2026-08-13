@@ -71,7 +71,7 @@ button:hover {
   padding: 0.2rem;
 }
 
-.pie-chart-container {
+.chart-container {
   position: relative;
   width: 100%;
   height: 50%;
@@ -79,6 +79,12 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.chart-view-container {
+  width: auto;
+  height: 800px;
+  border: 1px solid green;
 }
 
 .expense-cards-container {
@@ -237,6 +243,8 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: start;
+    height: 200px;
+    overflow-y: scroll;
   }
 }
 
@@ -255,7 +263,6 @@ button:hover {
   padding: 1rem;
   margin: 1rem;
 
-
   label {
     display: flex;
     flex-direction: column;
@@ -271,7 +278,6 @@ button:hover {
   }
 }
 
-
 .sort-form {
   display: flex;
   flex-direction: column;
@@ -279,9 +285,4 @@ button:hover {
   border: 1px solid red;
   align-items: start;
   width: fit-content;
-}
-
-.filter-sort-div {
-  display: flex;
-  flex-direction: row;
 }
