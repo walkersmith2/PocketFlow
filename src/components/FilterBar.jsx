@@ -1,10 +1,29 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 
 function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter}) {
-
+  
+  
+  useEffect(() => {
+    setCategoryFilter(prev => {
+      const newSet = new Set(prev);
+      categories.forEach(category => newSet.add(category.category));
+      return newSet;
+    });
+  }, [categories]);
+  
+  const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.category));
+  
   function handleDateFilterChange(e) {
     setDateFilter(e.target.value);
+  }
+
+  function handleAllOptionChange(e) {
+    if(isAllChecked) {
+      setCategoryFilter(new Set()); // deselect all
+    }
+    else {
+      setCategoryFilter(new Set(categories.map((category) => category.category))); // select all
+    }
   }
 
   function handleCategoryFilterChange(e) {
@@ -47,6 +66,10 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
       </fieldset>
       <fieldset>
         <h2>Filter by category</h2>
+        <label>
+          <input name="filter-category" type="checkbox" value="all" checked={isAllChecked} onChange={handleAllOptionChange}/>
+          All
+        </label>
         {categories.map((category) => (
           <label key={category.id}>
             <input name="filter-category" type="checkbox" value={category.category} checked={categoryFilter.has(category.category)} onChange={handleCategoryFilterChange}></input>

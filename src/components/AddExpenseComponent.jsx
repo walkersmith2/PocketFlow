@@ -3,7 +3,7 @@ import AddIcon from '../assets/add-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
 
-function AddExpenseComponent({ addExpense, categories }) {
+function AddExpenseComponent({ addExpense, categories, addCategory }) {
     const [isFormVisible, setIsFormVisible] = useState(false);
     function handleBtnClick() {
         setIsFormVisible(!isFormVisible);
@@ -12,7 +12,7 @@ function AddExpenseComponent({ addExpense, categories }) {
     return (
         <div className="add-expense-component">
             <button className="add-expense-btn" onClick={handleBtnClick}><AddIcon /> New Expense</button>
-            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense} categories={categories}/>) : <div className="add-expense-form-minimized"></div>}
+            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense} categories={categories} addCategory={addCategory}/>) : <div className="add-expense-form-minimized"></div>}
         </div>
     );
 }

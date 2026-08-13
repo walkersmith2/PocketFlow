@@ -17,7 +17,7 @@ function HomePage() {
   const [categories, setCategories] = useState([]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
   const [dateFilter, setDateFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState(new Set(categories));
+  const [categoryFilter, setCategoryFilter] = useState(new Set(categories.map((category) => category.category)));
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const { session } = useAuth();
@@ -187,8 +187,10 @@ function HomePage() {
           <div className="pie-chart-container">
             <PieChart expenses={visibleExpenses} categories={categories}/>
           </div>
-          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
-          <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
+          <div className="filter-sort-div">
+            <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
+            <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
+          </div>
         </div>
       </main>
       <footer>

@@ -7,7 +7,7 @@ function AddCategoryForm({ addCategory }) {
   function handleSubmit() {
     addCategory(category, color);
     setCategory("");
-    setColor("");
+    setColor("#FFFFFF");
   }
 
   return (

@@ -270,3 +270,18 @@ button:hover {
     background-color: rgb(53, 53, 53);
   }
 }
+
+
+.sort-form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  border: 1px solid red;
+  align-items: start;
+  width: fit-content;
+}
+
+.filter-sort-div {
+  display: flex;
+  flex-direction: row;
+}
