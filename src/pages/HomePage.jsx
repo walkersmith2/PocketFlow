@@ -7,6 +7,7 @@ import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
 import FilterBar from '../components/FilterBar';
+import SortBar from '../components/SortBar';
 import PersonIcon from '../assets/person-icon.svg?react';
 
 
@@ -18,6 +19,7 @@ function HomePage() {
   const [dateFilter, setDateFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState(new Set(categories));
   const [amountFilter, setAmountFilter] = useState(1000000);
+  const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const { session } = useAuth();
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ function HomePage() {
     getCategories();
   }, []);
 
-  useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter]);
+  useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter, sortCondition]);
 
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
@@ -34,7 +36,6 @@ function HomePage() {
       console.error(error);
       return;
     }
-    console.log("expenses: ", data);
     setExpenses(data);
   }
 
@@ -52,7 +53,6 @@ function HomePage() {
     const response = await supabase.from('expenses').delete().eq('id',expenseId);
     
     getExpenses();
-    console.log("delete");
   }
 
   async function addExpense(id, amount, date, description, category) {
@@ -65,7 +65,6 @@ function HomePage() {
       return;
     }
     getExpenses();
-    console.log("upsert");
   }
 
 
@@ -81,14 +80,38 @@ function HomePage() {
       return;
     }
     getCategories();
-    console.log("color: ", color);
-    console.log("upsert");
   }
 
   async function handleLogout() {
     await supabase.auth.signOut();
     navigate('/login');
   }
+
+  function sortExpenses(expenses) {
+    // Sort expenses based on selected sort option
+    console.log("sorted based on ", sortCondition);
+    if(sortCondition == "date-ascending") {
+      return expenses.sort((a,b) => {
+        const aDate = new Date(a.date + "T00:00:00").getTime();
+        const bDate = new Date(b.date + "T00:00:00").getTime();
+        return aDate - bDate;
+      });
+    }
+    else if(sortCondition == "date-descending") {
+      return expenses.sort((a,b) => {
+        const aDate = new Date(a.date + "T00:00:00").getTime();
+        const bDate = new Date(b.date + "T00:00:00").getTime();
+        return bDate - aDate;
+      });
+    }
+    else if(sortCondition == "amount-ascending") {
+      return expenses.sort((a,b) => a.amount - b.amount);
+    }
+    else if(sortCondition == "amount-descending") {
+      return expenses.sort((a,b) => b.amount - a.amount);
+    }
+  }
+
 
   function updateVisibleExpenses() {
     let filteredExpenses = [...expenses];
@@ -120,7 +143,10 @@ function HomePage() {
     // Apply amount filter
     filteredExpenses = filteredExpenses.filter((expense) => parseFloat(expense.amount) < amountFilter);
 
-    setVisibleExpenses(filteredExpenses);
+    // Sort Expenses
+    const sortedExpenses = sortExpenses(filteredExpenses);
+
+    setVisibleExpenses(sortedExpenses);
   }
 
   return (
@@ -162,6 +188,7 @@ function HomePage() {
             <PieChart expenses={visibleExpenses} categories={categories}/>
           </div>
           <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
+          <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
         </div>
       </main>
       <footer>

@@ -16,7 +16,6 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
       else {
         newSet.add(e.target.value);
       }
-      console.log(newSet);
       return newSet;
     });
   }

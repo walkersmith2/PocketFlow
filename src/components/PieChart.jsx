@@ -13,7 +13,6 @@ function PieChart({ expenses, categories }) {
     CATEGORY_ORDER.push(category.category);
     COLOR_MAP[category.category] = category.color + COLOR_ALPHA;
     BORDER_COLOR_MAP[category.category] = category.color;
-    console.log(CATEGORY_ORDER);
   });
 
   function getDataObject() {

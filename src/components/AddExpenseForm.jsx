@@ -23,7 +23,6 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
   function handleAddCategoryClick(e) {
     e.preventDefault();
     setIsAddCategoryFormVisible(prev => !prev);
-    console.log(isAddCategoryFormVisible);
   }
 
   return (
