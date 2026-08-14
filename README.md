@@ -7,7 +7,6 @@ This is a full stack application that lets users log and track their monthly exp
 - Allow anonymous users
 - Filter expenses by custom amount
 - Filter expenses by custom date range
-- Line graph tracks each category separately
 - Set budget for each category
     - track whether user goes over/under budget
 - Add ability to add income

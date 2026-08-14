@@ -47,7 +47,7 @@ function HomePage() {
       console.error(error);
       return;
     }
-    console.log("categories: ", data);
+    
     setCategories(data);
   }
 
@@ -91,7 +91,7 @@ function HomePage() {
 
   function sortExpenses(expenses) {
     // Sort expenses based on selected sort option
-    console.log("sorted based on ", sortCondition);
+    
     if(sortCondition == "date-ascending") {
       return expenses.sort((a,b) => {
         const aDate = new Date(a.date + "T00:00:00").getTime();
@@ -201,7 +201,7 @@ function HomePage() {
             Pie Chart View
           </label>
           <div className="chart-container">
-            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : <LineChart expenses={visibleExpenses} dateFilter={dateFilter}/>}
+            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
           </div>
           <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
         </div>

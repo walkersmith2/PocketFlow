@@ -6,6 +6,7 @@ import {
   LineElement,
   Tooltip,
 } from 'chart.js';
+
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -27,14 +28,41 @@ export const options = {
   }
 };
 
-function LineChart({ expenses, dateFilter }) {
+function LineChart({ expenses, categories, dateFilter }) {
 
   function getDataObject() {
     if(expenses.length === 0) {
       return {labels: [], datasets: []};
     }
+
+    const COLOR_MAP = {};
+    categories.forEach((category) => {
+      COLOR_MAP[category.category] = category.color;
+    });
+    COLOR_MAP['All'] = 'rgb(255, 255, 255)';
+
     let labels = [];
-    let data = [];
+    const activeCategoriesSet = new Set();
+    expenses.forEach((expense) => activeCategoriesSet.add(expense.category));
+    const activeCategories = Array.from(activeCategoriesSet);
+    let datasets = activeCategories.map((category) => {
+      return {
+        label: category,
+        data: [],
+        borderColor: COLOR_MAP[category] || 'rgb(150, 150, 150)',
+        backgroundColor: COLOR_MAP[category] || 'rgb(150, 150, 150)',
+      };
+    });
+
+    datasets.push(
+      {
+        label: 'All',
+        data: [],
+        borderColor: COLOR_MAP['All'],
+        backgroundColor: COLOR_MAP['All'],
+      }
+    );
+
     // get labels array (based on dateFilter)
     if(dateFilter === "all") {
       // get min and max dates in expenses
@@ -47,7 +75,6 @@ function LineChart({ expenses, dateFilter }) {
          return Math.max(maxDate, curDate);
       }, Number.NEGATIVE_INFINITY);
 
-      console.log(new Date(minDate), new Date(maxDate));
       // fill labels array
       const numDays = Math.round((maxDate - minDate) / 86400000) + 1;
       labels = Array.from({ length: numDays }, (_, index) => {
@@ -61,7 +88,11 @@ function LineChart({ expenses, dateFilter }) {
           return dayNumber === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        data[index] = expensesTotal;
+        activeCategories.forEach((category) => {
+          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
+          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
+        })
+        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
       });
     }
     if(dateFilter === "week") {
@@ -73,7 +104,11 @@ function LineChart({ expenses, dateFilter }) {
           return dayOfWeek === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        data[index] = expensesTotal;
+        activeCategories.forEach((category) => {
+          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
+          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
+        })
+        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
       });
     }
     if(dateFilter === "month") {
@@ -86,12 +121,15 @@ function LineChart({ expenses, dateFilter }) {
           return dayOfMonth === day;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        data[index] = expensesTotal;
+        activeCategories.forEach((category) => {
+          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
+          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
+        })
+        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
       });
     }
     if(dateFilter === "year") {
       const year = new Date().getFullYear();
-      console.log("year: ", year);
       const daysInCurrentYear = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
       labels = Array.from({ length: daysInCurrentYear }, (_, index) => {
         const date = new Date(year, 0, index + 1);
@@ -104,20 +142,17 @@ function LineChart({ expenses, dateFilter }) {
           return dayOfYear === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        data[index] = expensesTotal;
+        activeCategories.forEach((category) => {
+          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
+          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
+        })
+        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
       });
     }
 
     const dataObject = {
       labels,
-      datasets: [
-        {
-          label: 'All Expenses',
-          data: data,
-          borderColor: 'rgb(255, 255, 255)',
-          backgroundColor: 'rgba(255, 255, 255)',
-        },
-      ],
+      datasets,
     };
     
     return dataObject;
