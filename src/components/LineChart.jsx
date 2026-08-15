@@ -7,6 +7,7 @@ import {
   Tooltip,
 } from 'chart.js';
 
+import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -30,6 +31,17 @@ export const options = {
 
 function LineChart({ expenses, categories, dateFilter }) {
 
+  const [areCategoryLinesVisible, setAreCategoryLinesVisible] = useState(true);
+  
+  function handleChartToggleChange(e) {
+    if(areCategoryLinesVisible) {
+      setAreCategoryLinesVisible(false);
+    }
+    else {
+      setAreCategoryLinesVisible(true);
+    }
+  }
+
   function getDataObject() {
     if(expenses.length === 0) {
       return {labels: [], datasets: []};
@@ -37,50 +49,62 @@ function LineChart({ expenses, categories, dateFilter }) {
 
     const COLOR_MAP = {};
     categories.forEach((category) => {
-      COLOR_MAP[category.category] = category.color;
+      COLOR_MAP[category.id] = category.color;
     });
-    COLOR_MAP['All'] = 'rgb(255, 255, 255)';
+    COLOR_MAP[-1] = 'rgb(255, 255, 255)';
 
     let labels = [];
     const activeCategoriesSet = new Set();
-    expenses.forEach((expense) => activeCategoriesSet.add(expense.category));
+    expenses.forEach((expense) => activeCategoriesSet.add(expense.categoryId));
     const activeCategories = Array.from(activeCategoriesSet);
-    let datasets = activeCategories.map((category) => {
-      return {
-        label: category,
-        data: [],
-        borderColor: COLOR_MAP[category] || 'rgb(150, 150, 150)',
-        backgroundColor: COLOR_MAP[category] || 'rgb(150, 150, 150)',
-      };
-    });
-
+    let datasets = [];
+    
+    if(areCategoryLinesVisible) {
+      datasets = activeCategories.map((categoryId) => {
+        return {
+          id: categoryId,
+          label: categories.find(category => category.id === categoryId).category,
+          data: [],
+          borderColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
+          backgroundColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
+        };
+      });
+    }
+    
     datasets.push(
       {
+        id: -1,
         label: 'All',
         data: [],
-        borderColor: COLOR_MAP['All'],
-        backgroundColor: COLOR_MAP['All'],
+        borderColor: COLOR_MAP[-1],
+        backgroundColor: COLOR_MAP[-1],
       }
     );
 
     // get labels array (based on dateFilter)
     if(dateFilter === "all") {
       // get min and max dates in expenses
-      const minDate = expenses.reduce((minDate, expense) => {
-         const curDate = new Date(expense.date + "T00:00:00").getTime();
-         return Math.min(minDate, curDate);
-      }, Number.POSITIVE_INFINITY);
       const maxDate = expenses.reduce((maxDate, expense) => {
          const curDate = new Date(expense.date + "T00:00:00").getTime();
          return Math.max(maxDate, curDate);
       }, Number.NEGATIVE_INFINITY);
+      let minDate = expenses.reduce((minDate, expense) => {
+         const curDate = new Date(expense.date + "T00:00:00").getTime();
+         return Math.min(minDate, curDate);
+      }, Number.POSITIVE_INFINITY);
+      
 
       // fill labels array
-      const numDays = Math.round((maxDate - minDate) / 86400000) + 1;
+      let numDays = Math.round((maxDate - minDate) / 86400000) + 1;
+      if(numDays == 1) {
+        minDate = maxDate - 86400000;
+        numDays = numDays = Math.round((maxDate - minDate) / 86400000) + 1;
+      }
       labels = Array.from({ length: numDays }, (_, index) => {
         const date = new Date(minDate + index * 86400000);
         return date.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
       });
+
       labels.forEach((day, index) => {
         const currentDayExpenses = expenses.filter((expense) => {
           const expenseDate = new Date(expense.date + "T00:00:00");
@@ -88,11 +112,13 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayNumber === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        activeCategories.forEach((category) => {
-          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
-          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
-        })
-        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
+        if(areCategoryLinesVisible) {
+          activeCategories.forEach((categoryId) => {
+            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
+            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
+          })
+        }
+        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
       });
     }
     if(dateFilter === "week") {
@@ -104,11 +130,13 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayOfWeek === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        activeCategories.forEach((category) => {
-          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
-          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
-        })
-        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
+        if(areCategoryLinesVisible) {
+          activeCategories.forEach((categoryId) => {
+            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
+            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
+          })
+        }
+        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
       });
     }
     if(dateFilter === "month") {
@@ -121,11 +149,13 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayOfMonth === day;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        activeCategories.forEach((category) => {
-          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
-          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
-        })
-        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
+        if(areCategoryLinesVisible) {
+          activeCategories.forEach((categoryId) => {
+            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
+            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
+          })
+        }
+        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
       });
     }
     if(dateFilter === "year") {
@@ -142,11 +172,13 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayOfYear === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        activeCategories.forEach((category) => {
-          const catTotal = currentDayExpenses.filter((expense) => expense.category === category).reduce((total, expense) => total + expense.amount, 0);
-          datasets.find((dataset) => dataset.label === category).data[index] = catTotal;
-        })
-        datasets.find((dataset) => dataset.label === 'All').data[index] = expensesTotal;
+        if(areCategoryLinesVisible) {
+          activeCategories.forEach((categoryId) => {
+            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
+            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
+          })
+        }
+        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
       });
     }
 

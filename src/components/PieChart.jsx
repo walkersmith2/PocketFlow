@@ -10,24 +10,27 @@ function PieChart({ expenses, categories }) {
   const COLOR_MAP = {};
   const BORDER_COLOR_MAP = {};
   categories.forEach((category) => {
-    CATEGORY_ORDER.push(category.category);
-    COLOR_MAP[category.category] = category.color + COLOR_ALPHA;
-    BORDER_COLOR_MAP[category.category] = category.color;
+    CATEGORY_ORDER.push(category.id);
+    COLOR_MAP[category.id] = category.color + COLOR_ALPHA;
+    BORDER_COLOR_MAP[category.id] = category.color;
   });
 
-  function getDataObject() {
+   function getDataObject() {
     if(!expenses) return;
 
-    const categories = {};
-    let total = 0;
+    const totalsByCategory = {}; // renamed from `categories` to avoid shadowing the prop
     expenses.forEach((expense) => {
-      categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
+      totalsByCategory[expense.categoryId] = (totalsByCategory[expense.categoryId] || 0) + expense.amount;
     });
 
-    const categoriesArr = CATEGORY_ORDER.filter((cat) => categories[cat] > 0);
-    const numArr = categoriesArr.map(cat => categories[cat]);
+    const categoriesArr = CATEGORY_ORDER.filter((cat) => totalsByCategory[cat] > 0);
+    const numArr = categoriesArr.map(cat => totalsByCategory[cat]);
+    const labelsArr = categoriesArr.map(
+      cat => categories.find(category => category.id === cat)?.category ?? 'Unknown'
+    );
+
     const data = {
-      labels: categoriesArr,
+      labels: labelsArr,
       datasets: [
         {
           label: 'Total Amount',

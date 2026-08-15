@@ -20,6 +20,15 @@ header {
   /* border: 1px solid red; */
 }
 
+.logo-div {
+  text-align: start;
+  
+  * {
+    padding: 0;
+    margin: 1rem;    
+  }
+}
+
 .homepage-main {
   width: 95%;
   max-width: 1200px;
@@ -28,7 +37,7 @@ header {
   align-self: center;
   display: grid;
   grid-template-columns: min-content auto;
-  border: 1px solid yellow;
+  /* border: 1px solid yellow; */
 }
 
 footer {
@@ -75,24 +84,27 @@ button:hover {
   position: relative;
   width: 100%;
   height: 50%;
-  border: 1px solid red;
+  background-color: rgba(60, 60, 60, 0.3);
+  border-radius: 1rem;
+  /* border: 1px solid red; */
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .chart-view-container {
   width: auto;
   height: 800px;
-  border: 1px solid green;
+  /* border: 1px solid green; */
 }
 
 .expense-cards-container {
-  border: 1px solid violet;
+  /* border: 1px solid violet; */
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 800px;
+  width: 300px;
 }
 
 .add-expense-btn {
@@ -172,11 +184,11 @@ button:hover {
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
-  border: 1px solid rgb(190, 190, 190);
-  border-radius: 0.5rem;
-  /* box-shadow: inset 0 1rem 1rem 1rem rgba(0,0,0,0.5); */
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
   flex-grow: 1;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .login-form, .signup-form, .reset-password-form {
@@ -235,7 +247,7 @@ button:hover {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   align-items: start;
   width: fit-content;
 
@@ -282,7 +294,51 @@ button:hover {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   align-items: start;
   width: fit-content;
 }
+
+.category-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* border: 1px solid white; */
+
+  .btnDiv {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0.5rem;
+    /* border: 1px solid red; */
+  }
+
+  .btnDiv button {
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+    margin: 0.2rem;
+    border: 0;
+  }
+
+  .btnDiv button:hover {
+      background-color: rgb(121, 121, 121);
+  }
+
+  .btnDiv .deleteBtn {
+      background-color: rgb(204, 29, 29);
+  }
+
+  .btnDiv .deleteBtn:hover {
+      background-color: rgb(255, 36, 36);
+  }
+  
+  .btnDiv .deleteBtn:disabled {
+      background-color: rgba(204, 29, 29, 0.1);
+  } 
+  
+}
+

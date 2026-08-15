@@ -18,7 +18,7 @@ function HomePage() {
   const [categories, setCategories] = useState([]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
   const [dateFilter, setDateFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState(new Set(categories.map((category) => category.category)));
+  const [categoryFilter, setCategoryFilter] = useState(new Set(categories.map((category) => category.id)));
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const [isPieChartVisible, setIsPieChartVisible] = useState(false);
@@ -51,15 +51,9 @@ function HomePage() {
     setCategories(data);
   }
 
-  async function deleteExpense(expenseId) {
-    const response = await supabase.from('expenses').delete().eq('id',expenseId);
-    
-    getExpenses();
-  }
-
-  async function addExpense(id, amount, date, description, category) {
-    const row = id == -1 ? {amount: amount, date: date, description: description, category: category} :
-    {id: id, amount: amount, date: date, description: description, category: category};
+  async function addExpense(id, amount, date, description, categoryId) {
+    const row = id == -1 ? {amount: amount, date: date, description: description, categoryId: categoryId} :
+    {id: id, amount: amount, date: date, description: description, categoryId: categoryId};
     const { data, error } = await supabase.from('expenses').upsert(row);
 
     if (error) {
@@ -69,18 +63,30 @@ function HomePage() {
     getExpenses();
   }
 
+  async function deleteExpense(expenseId) {
+    const response = await supabase.from('expenses').delete().eq('id',expenseId);
+    
+    getExpenses();
+  }
 
-  async function addCategory(category, color) {
+
+  async function addCategory(id, category, color) {
     if(categories.includes((row) => row.category === category)) {
       return;
     }
-    const row = {category: category, color: color};
+    const row = id == -1 ? {category: category, color: color} : {id: id, category: category, color: color};
     const { data, error } = await supabase.from('categories').upsert(row);
 
     if (error) {
       console.error(error);
       return;
     }
+    getCategories();
+  }
+
+  async function deleteCategory(categoryId) {
+    const response = await supabase.from('categories').delete().eq('id',categoryId);
+      
     getCategories();
   }
 
@@ -140,7 +146,7 @@ function HomePage() {
     });
 
     // Apply category filter
-    filteredExpenses = filteredExpenses.filter((expense) => categoryFilter.has(expense.category));
+    filteredExpenses = filteredExpenses.filter((expense) => categoryFilter.has(expense.categoryId));
 
     // Apply amount filter
     filteredExpenses = filteredExpenses.filter((expense) => parseFloat(expense.amount) < amountFilter);
@@ -163,7 +169,10 @@ function HomePage() {
   return (
     <div className="homepage-container">
       <header>
-        <h1>Expense Tracker</h1>
+        <div className="logo-div">
+          <h1>PocketFlow</h1>
+          <h2>Effortless expense tracking, intelligent insights.</h2>
+        </div>
         <ul id="header-buttons-ul">
           <li>
             <button className="account-btn header-btn">
@@ -191,6 +200,7 @@ function HomePage() {
               <li>No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters under the chart.</li>
             }
           </ul>
+          <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}.</p>
         </div>
         <div className="chart-view-container">
           <div className="amount-total-container">
@@ -201,9 +211,10 @@ function HomePage() {
             Pie Chart View
           </label>
           <div className="chart-container">
-            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
+            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
+            <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
           </div>
-          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}/>
+          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter} addCategory={addCategory} deleteCategory={deleteCategory} />
         </div>
       </main>
       <footer>

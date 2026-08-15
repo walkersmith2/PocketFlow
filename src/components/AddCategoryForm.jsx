@@ -1,13 +1,18 @@
 import { useState } from 'react';
 
-function AddCategoryForm({ addCategory }) {
+function AddCategoryForm({ addCategory, setIsAddCategoryFormVisible }) {
   const [category, setCategory] = useState("");
   const [color, setColor] = useState("#FFFFFF");
 
   function handleSubmit() {
-    addCategory(category, color);
+    addCategory(-1, category, color);
     setCategory("");
     setColor("#FFFFFF");
+  }
+
+  function handleCancel(e) {
+    e.preventDefault();
+    setIsAddCategoryFormVisible(false);
   }
 
   return (
@@ -21,7 +26,10 @@ function AddCategoryForm({ addCategory }) {
         <input type="color" name="color" value={color} onChange={(e) => setColor(e.target.value)}></input>
         Label Color
       </label>
-      <button type="submit">Add</button>
+      <div className="button-div">
+        <button type="submit">Add</button>
+        <button type="button" onClick={handleCancel}>Cancel</button>
+      </div>
     </form>
   );
 }

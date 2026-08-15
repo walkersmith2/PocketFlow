@@ -22,14 +22,14 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, addCatego
         {isEditable ? 
         <AddExpenseForm setIsVisible={setIsEditable} addExpense={addExpense} expense={expense} categories={categories}  addCategory={addCategory}/> :
         <div className={styles.expenseCardContainer}>
-            <div className={styles.colorLabel} style={{backgroundColor: [categories.find(category => category.category === expense.category).color]}}></div>
+            <div className={styles.colorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></div>
             <div className={styles.expenseCard}>
                 <div className={styles.textDiv}>
                     <h2 >${expense.amount.toFixed(2)}</h2>
                     <div className={styles.subtitleDiv}>
                         <p >{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric' })}</p>
                         <p >{expense.description}</p>
-                        <p >{expense.category}</p>
+                        <p >{categories.find(category => category.id === expense.categoryId).category}</p>
                     </div>
                 </div>
                 <div className={styles.btnDiv}>

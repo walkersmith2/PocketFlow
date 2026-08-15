@@ -12,11 +12,11 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
   function handleSubmit(formData) {
     const id = (parseFloat(formData.get("id")));
     const amount = parseFloat(formData.get("amount"));
-    const date = new Date(formData.get("date"));
+    const date = formData.get("date");
     const description = formData.get("description");
-    const category = formData.get("category");
+    const categoryId = formData.get("categoryId");
 
-    addExpense(id, amount, date, description, category);
+    addExpense(id, amount, date, description, categoryId);
     setIsVisible(false);
   }
 
@@ -36,7 +36,7 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
           Amount
         </label>
         <label>
-          <input name="date" defaultValue={expense?.date ?? new Date().toLocaleDateString('en-CA')}className="date-input" type="date" required />
+          <input name="date" defaultValue={expense?.date ?? new Date().toLocaleDateString('en-CA')} className="date-input" type="date" required />
           Date
         </label>
         <label>
@@ -45,18 +45,18 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
         </label>
           
         <label>
-          <select name="category" defaultValue={expense?.category ?? ""} className="category-select" required>
-            { categories.map((category) => (<option key={category.id} value={category.category}>{category.category}</option>)) }
+          <select name="categoryId" defaultValue={expense?.categoryId ?? 0} className="category-select" required>
+            { categories.map((category) => (<option key={category.id} value={category.id}>{category.category}</option>)) }
           </select>
           <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+</button>
           Category
         </label>
         <div className="add-expense-submit-btn-div">
-            <button className="add-expense-submit-btn" type="submit">Add</button>
+            <button className="add-expense-submit-btn" type="submit">{expense ? 'Save' : 'Add'}</button>
             <button className="cancel-expense-submit-btn" type="button" onClick={handleCancel}>Cancel</button>
         </div>
       </form>
-      {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} />}
+      {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />}
     </>
   );
 }
