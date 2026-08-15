@@ -170,8 +170,9 @@ function HomePage() {
     <div className="homepage-container">
       <header>
         <div className="logo-div">
-          <h1>PocketFlow</h1>
+          <h1>Pocket<span>Flow</span>.</h1>
           <h2>Effortless expense tracking, intelligent insights.</h2>
+          <hr></hr>
         </div>
         <ul id="header-buttons-ul">
           <li>
@@ -204,7 +205,7 @@ function HomePage() {
         </div>
         <div className="chart-view-container">
           <div className="amount-total-container">
-            <p>Total: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toFixed(2)}</p>
+            <p>Total: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <label>
             <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
@@ -220,7 +221,7 @@ function HomePage() {
       <footer>
         <p>Walker Smith 2026</p>
       </footer>
-    </div> 
+    </div>
   );
 }
 

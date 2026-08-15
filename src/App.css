@@ -1,7 +1,9 @@
 .homepage-container {
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
   height: 100vh;
   width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
 input[type="number"] {
@@ -13,27 +15,55 @@ header {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem 1rem 1rem;
+  justify-content: center;
+  padding: 1rem 1rem 1rem 1rem;
   width: auto;
   background-color: #16171d;
+  background: none;
   /* border: 1px solid red; */
 }
 
 .logo-div {
   text-align: start;
-  
-  * {
+  height: fit-content;
+  width: fit-content;
+  /* border: 1px solid white; */
+
+  > * {
     padding: 0;
-    margin: 1rem;    
+    margin: 0;
+    font-weight: 400; 
   }
+  
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  h1 > * {
+    color: #39d798;
+    font-weight: 600;
+  }
+
+  h2 {
+    color: rgb(193, 193, 193);
+    font-weight: 300;
+  }
+
+  hr {
+    margin: 0.7rem 0;
+  }
+
+
 }
+
+
 
 .homepage-main {
   width: 95%;
   max-width: 1200px;
-  height: 85vh;
+  height: fit-content;
   margin: auto;
+  padding: 0;
   align-self: center;
   display: grid;
   grid-template-columns: min-content auto;
@@ -86,6 +116,8 @@ button:hover {
   height: 50%;
   background-color: rgba(60, 60, 60, 0.3);
   border-radius: 1rem;
+  padding: 1rem;
+  margin: 1rem 0;
   /* border: 1px solid red; */
   display: flex;
 }
@@ -93,6 +125,7 @@ button:hover {
 .chart-view-container {
   width: auto;
   height: 800px;
+  margin: 0 1rem;
   /* border: 1px solid green; */
 }
 
@@ -247,9 +280,9 @@ button:hover {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  /* border: 1px solid red; */
   align-items: start;
   width: fit-content;
+  justify-self: center;
 
   fieldset {
     display: flex;
@@ -257,12 +290,19 @@ button:hover {
     align-items: start;
     height: 200px;
     overflow-y: scroll;
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 0 0.5rem;
+    background-color: rgba(60, 60, 60, 0.3);
   }
 }
 
 .amount-total-container {
   padding: 1rem;
   font-size: 2rem;
+  color: white;
+  font-weight: 600;
 }
 
 .add-category-form {
