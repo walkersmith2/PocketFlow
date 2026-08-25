@@ -75,12 +75,14 @@ footer {
 }
 
 button {
-  border: 0;
   background-color: rgb(63, 63, 63);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 button:hover {
-  background-color: rgb(132, 132, 132);
+  background-color: rgb(96, 96, 96);
+  border-color: rgba(255, 255, 255, 1);
 }
 
 .header-btn {
@@ -111,7 +113,7 @@ button:hover {
 }
 
 .chart-container {
-  position: relative;
+  /* position: relative; */
   width: 100%;
   height: 50%;
   background-color: rgba(60, 60, 60, 0.3);
@@ -141,16 +143,16 @@ button:hover {
 }
 
 .add-expense-btn {
-  width: 100%;
-  border-radius: 0.5rem 0.5rem 0 0 ;
+  width: 300px;
+  border-radius: 0.5rem;
   padding: 1rem;
-  /* margin: 1rem 0; */
+  margin: 0;
   font-size: 1.5rem;
   font-weight: bold;
-  background-color: rgb(122, 122, 122);
 }
 
 .add-expense-form-minimized {
+  display: none;
   background-color: rgba(255,255,225, 0.1);
   width: 100%;
   height: 2rem;
@@ -158,11 +160,13 @@ button:hover {
 }
 
 .add-expense-form {
+  position: absolute;
+  top: 13rem;
   display: flex;
   flex-direction: column;
-  width: auto;
-  background-color: rgba(255,255,225, 0.1);
-  border-radius: 0 0 0.5rem 0.5rem;
+  width: 300px;
+  background-color: rgb(72, 72, 72);
+  border-radius: 0.5rem;
   flex-wrap: nowrap;
   padding: 0.8rem;
 
@@ -217,11 +221,13 @@ button:hover {
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
+  margin: 0;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 1rem;
   flex-grow: 1;
   overflow-y: scroll;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .login-form, .signup-form, .reset-password-form {
@@ -256,7 +262,7 @@ button:hover {
     }
   }
 
-  .login-btn, .signup-btn, .reset-password-btn {
+  .login-btn, .try-anonymous-btn, .signup-btn, .reset-password-btn {
     width: 100%;
     margin-top: 1rem;
     padding: 0.5rem 0;
@@ -347,6 +353,11 @@ button:hover {
   width: 100%;
   /* border: 1px solid white; */
 
+  .color-label {
+    width: 1rem;
+    height: 1rem;
+  }
+
   .btnDiv {
     display: flex;
     flex-direction: row;
@@ -379,6 +390,6 @@ button:hover {
   .btnDiv .deleteBtn:disabled {
       background-color: rgba(204, 29, 29, 0.1);
   } 
-  
+
 }
 

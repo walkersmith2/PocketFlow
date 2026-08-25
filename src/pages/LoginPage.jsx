@@ -9,6 +9,17 @@ function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  async function handleClick() {
+    const { data, error } = await supabase.auth.signInAnonymously();
+    
+    if(error) {
+      setError(error.message);
+      return;
+    }
+
+    navigate('/');
+  }
+
   async function handleLogin(e) {
     e.preventDefault();
 
@@ -42,6 +53,7 @@ function LoginPage() {
         </label>
         {error && <p className="error-message">{error}</p>}
         <button className="login-btn" type="submit">Log In</button>
+        <button className="try-anonymous-btn" onClick={handleClick}>Try it out</button>
       </form>
       <p>
         <Link to="/reset-password">Reset Password</Link>

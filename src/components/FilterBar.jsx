@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AddCategoryForm from './AddCategoryForm';
 
 import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
@@ -8,6 +9,9 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
   const [editableCategory, setEditableCategory] = useState();
   const [editableCategoryText, setEditableCategoryText] = useState("");
   const [nonEmptyCategories, setNonEmptyCategories] = useState();
+  const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
+
+  
 
   useEffect(() => {
     setCategoryFilter(prev => {
@@ -25,6 +29,11 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
   
   const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.id));
   
+  function handleAddCategoryClick(e) {
+    e.preventDefault();
+    setIsAddCategoryFormVisible(prev => !prev);
+  }
+
   function handleDateFilterChange(e) {
     setDateFilter(e.target.value);
   }
@@ -86,6 +95,7 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
   }
 
   return (
+    <>
     <form className="filter-form">
       <fieldset>
         <h2>Filter by date range</h2>
@@ -113,8 +123,8 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
           All
         </label>
         {categories.sort((a,b) => a.id - b.id).map((category) => (
-          
           <div key={category.id} className="category-div">
+            <div className="color-label" style={{backgroundColor: category.color}}></div>
             <label key={category.id}>
               <input name="filter-category" type="checkbox" value={category.id} checked={categoryFilter.has(category.id)} onChange={handleCategoryFilterChange}></input>
               { editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }
@@ -129,7 +139,6 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
       </fieldset>
       <fieldset>
         <h2>Filter by amount</h2>
-        <input type="range" min="0" max="1000" defaultValue="500" step="100" />
         <label>
           <input name="filter-amount" type="radio"  value="10" checked={amountFilter === 10} onChange={handleAmountFilterChange}></input>
           Under $10
@@ -149,6 +158,9 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
         
       </fieldset>
     </form>
+    <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+</button>
+    {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />}
+    </>
   )
 }
 

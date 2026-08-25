@@ -205,7 +205,7 @@ function HomePage() {
         </div>
         <div className="chart-view-container">
           <div className="amount-total-container">
-            <p>Total: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p>Total Spent: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <label>
             <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
