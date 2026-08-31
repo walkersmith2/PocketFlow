@@ -230,7 +230,7 @@ button:hover {
   /* overflow-x: hidden; */
 }
 
-.login-form, .signup-form, .reset-password-form {
+.login-form, .signup-form, .reset-password-form, .reset-password-redirect-form {
   border: 1px solid rgba(255,255,255,0.3);
   border-radius: 1rem;
   display: flex;
@@ -390,6 +390,9 @@ button:hover {
   .btnDiv .deleteBtn:disabled {
       background-color: rgba(204, 29, 29, 0.1);
   } 
-
 }
 
+.empty-expenses-msg {
+  padding: 10rem 1rem;
+  
+}

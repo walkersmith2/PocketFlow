@@ -32,18 +32,21 @@ function ResetPasswordPageRedirect() {
     <>
       {!passwordChanged && (
       <>
-        <h1>Reset Password</h1>
         <form className="reset-password-redirect-form" onSubmit={handleSubmit}>
+           <div className="reset-password-form-header">
+                    <h1>Reset Password</h1>
+                    <h2>Enter new password below</h2>
+                </div>
           <label>
             New password
-            <input type="password" placeholder="New password" value={password} onChange={e => setPassword(e.target.value)}/>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
           </label>
           <label>
             Confirm new password
-            <input type="password" placeholder="Confirm New password"  value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/>
+            <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/>
           </label>
-          {error && <p>{error}</p>}
-          <button type="submit">Change Password</button>
+          {error && <p className="error-message">{error}</p>}
+          <button  className="reset-password-btn" type="submit">Change Password</button>
         </form>
       </>
       )}

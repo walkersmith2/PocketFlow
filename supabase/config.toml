@@ -213,8 +213,8 @@ web3 = 30
 # Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
 # [auth.captcha]
 # enabled = true
-# provider = "hcaptcha"
-# secret = ""
+# provider = "turnstile"
+# secret = "0x4AAAAAAEjEgxXIlQ1liawksvA7gNk_EY4"
 
 [auth.email]
 # Allow/disallow new user signups via email to your project.

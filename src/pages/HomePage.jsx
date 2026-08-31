@@ -171,15 +171,12 @@ function HomePage() {
       <header>
         <div className="logo-div">
           <h1>Pocket<span>Flow</span>.</h1>
-          <h2>Effortless expense tracking, intelligent insights.</h2>
+          <h2>Expense tracking, simplified.</h2>
           <hr></hr>
         </div>
         <ul id="header-buttons-ul">
           <li>
-            <button className="account-btn header-btn">
-              <span><PersonIcon /></span>
-              <span>Account</span>
-            </button>
+            <p>Logged in as {session.user.email || 'guest'}</p>
           </li>
           <li>
             <button className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
@@ -198,7 +195,7 @@ function HomePage() {
                   <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory}/>
                   </li>
               )) :
-              <li>No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters under the chart.</li>
+              <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters under the chart.</div></li>
             }
           </ul>
           <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}.</p>
