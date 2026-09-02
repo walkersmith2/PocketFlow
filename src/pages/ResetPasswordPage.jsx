@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { Turnstile } from '@marsidev/react-turnstile'
@@ -8,16 +8,20 @@ function ResetPasswordPage() {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [captchaToken, setCaptchaToken] = useState();
+    const turnstileRef = useRef(null);
 
     async function handleReset(e) {
         e.preventDefault();
         setError('');
         setMessage('');
 
-        const { error } = await supabase.auth.resetPasswordForEmail( email, {
+       const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${window.location.origin}/reset-password-redirect`,
-            options: { captchaToken },
+            captchaToken,
         });
+
+        turnstileRef.current?.reset();
+        setCaptchaToken(undefined);
 
         if (error) {
             setError(error.message);
@@ -44,18 +48,16 @@ function ResetPasswordPage() {
                 </div>
                 <label>
                     Email
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
+                    <input type="email" required value={email} onChange={e => setEmail(e.target.value)}></input>
                 </label>
                 <button className="reset-password-btn" type="submit">Send Reset Link</button>
-                {error && <p>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 {message && <p>{message}</p>}
                 <Turnstile
+                    ref={turnstileRef}
                     siteKey="0x4AAAAAAEjEg1WHD-FahuWt"
                     onSuccess={(token) => {
                         setCaptchaToken(token)
-                    }}
-                    options={{
-                        size: 'invisible',
                     }}
                 />
             </form>

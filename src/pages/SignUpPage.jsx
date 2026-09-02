@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient'
 import { Turnstile } from '@marsidev/react-turnstile'
@@ -10,6 +10,7 @@ function SignUpPage() {
     const [error, setError] = useState('');
     const [captchaToken, setCaptchaToken] = useState();
     const navigate = useNavigate();
+    const turnstileRef = useRef(null);
 
     async function handleSignUp(e) {
         e.preventDefault();
@@ -25,6 +26,9 @@ function SignUpPage() {
             password: password,
             options: { captchaToken },
         })
+
+        turnstileRef.current?.reset();
+        setCaptchaToken(undefined);
 
         if(error) {
             console.error(error.message);
@@ -52,25 +56,23 @@ function SignUpPage() {
                 </div>
                 <label>
                     Email
-                    <input name="email" type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
+                    <input name="email" type="email" required value={email} onChange={e => setEmail(e.target.value)}></input>
                 </label>
                 <label>
                     Password
-                    <input name="password" type="password" value={password} onChange={e => setPassword(e.target.value)}></input>
+                    <input name="password" type="password" required value={password} onChange={e => setPassword(e.target.value)}></input>
                 </label>
                 <label>
                     Confirm Password
-                    <input name="confirm-password" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}></input>
+                    <input name="confirm-password" type="password" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}></input>
                 </label>
-                {error && <p>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <button className="signup-btn" type="submit">Sign Up</button>
                 <Turnstile
+                    ref={turnstileRef}
                     siteKey="0x4AAAAAAEjEg1WHD-FahuWt"
                     onSuccess={(token) => {
                         setCaptchaToken(token)
-                    }}
-                    options={{
-                        size: 'invisible',
                     }}
                 />
                 <p>

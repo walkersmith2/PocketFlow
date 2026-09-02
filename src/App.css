@@ -296,7 +296,7 @@ button:hover {
   }
 
   .error-message {
-    color: red;
+    color: rgb(253, 86, 86);
   }
 }
 

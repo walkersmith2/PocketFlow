@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient'
 import { Turnstile } from '@marsidev/react-turnstile'
@@ -9,8 +9,10 @@ function LoginPage() {
   const [error, setError] = useState('');
   const [captchaToken, setCaptchaToken] = useState();
   const navigate = useNavigate();
+  const turnstileRef = useRef(null);
 
-  async function handleClick() {
+  async function handleClick(e) {
+    e.preventDefault();
     const { data, error } = await supabase.auth.signInAnonymously(
       {options: { captchaToken },
     });
@@ -32,6 +34,9 @@ function LoginPage() {
       options: { captchaToken },
     })
 
+    turnstileRef.current?.reset();
+    setCaptchaToken(undefined);
+    
     if(error) {
       setError(error.message);
       return;
@@ -56,22 +61,20 @@ function LoginPage() {
         </div>
         <label>
           Email
-          <input name="email" type="email" value={email} onChange={e => setEmail(e.target.value)}></input>
+          <input name="email" type="email" required value={email} onChange={e => setEmail(e.target.value)}></input>
         </label>
         
         <label>
           Password
-          <input name="password" type="password" value={password} onChange={e => setPassword(e.target.value)}></input>
+          <input name="password" required type="password" value={password} onChange={e => setPassword(e.target.value)}></input>
         </label>
         {error && <p className="error-message">{error}</p>}
         <button className="login-btn" type="submit">Log In</button>        
         <Turnstile
+          ref={turnstileRef}
           siteKey="0x4AAAAAAEjEg1WHD-FahuWt"
           onSuccess={(token) => {
               setCaptchaToken(token)
-          }}
-          options={{
-            size: 'invisible',
           }}
         />
         <p>
