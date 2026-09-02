@@ -8,6 +8,7 @@ function AddCategoryForm({ addCategory, setIsAddCategoryFormVisible }) {
     addCategory(-1, category, color);
     setCategory("");
     setColor("#FFFFFF");
+    setIsAddCategoryFormVisible(false);
   }
 
   function handleCancel(e) {

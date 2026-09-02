@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import AddIcon from '../assets/add-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
 
-function AddExpenseComponent({ addExpense, categories, addCategory }) {
+function AddExpenseComponent({ addExpense, categories, addCategory, setIsAddCategoryFormVisible }) {
     const [isFormVisible, setIsFormVisible] = useState(false);
     function handleBtnClick() {
         setIsFormVisible(!isFormVisible);
@@ -11,8 +10,8 @@ function AddExpenseComponent({ addExpense, categories, addCategory }) {
 
     return (
         <div className="add-expense-component">
-            <button className="add-expense-btn" onClick={handleBtnClick}><AddIcon /> New Expense</button>
-            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense} categories={categories} addCategory={addCategory}/>) : <div className="add-expense-form-minimized"></div>}
+            <button className="add-expense-btn" onClick={handleBtnClick}>New Expense</button>
+            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />) : <div className="add-expense-form-minimized"></div>}
         </div>
     );
 }

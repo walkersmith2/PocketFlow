@@ -5,14 +5,11 @@ import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import SaveIcon from '../assets/check-lg-icon.svg?react';
 
-function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter, addCategory, deleteCategory }) {
+function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter, addCategory, deleteCategory, setIsAddCategoryFormVisible }) {
   const [editableCategory, setEditableCategory] = useState();
   const [editableCategoryText, setEditableCategoryText] = useState("");
   const [nonEmptyCategories, setNonEmptyCategories] = useState();
-  const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
-
   
-
   useEffect(() => {
     setCategoryFilter(prev => {
       const newSet = new Set(prev);
@@ -116,7 +113,7 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
           All Time
         </label>
       </fieldset>
-      <fieldset>
+      <fieldset className="category-fieldset">
         <h2>Filter by category</h2>
         <label>
           <input name="filter-category" type="checkbox" value="all" checked={isAllChecked} onChange={handleAllOptionChange}/>
@@ -136,6 +133,7 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
             </div>
           </div>
         ))}
+        <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
       </fieldset>
       <fieldset>
         <h2>Filter by amount</h2>
@@ -155,11 +153,8 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
           <input name="filter-amount" type="radio"  value="1000000" checked={amountFilter === 1000000} onChange={handleAmountFilterChange}></input>
           All
         </label>
-        
       </fieldset>
     </form>
-    <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+</button>
-    {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />}
     </>
   )
 }

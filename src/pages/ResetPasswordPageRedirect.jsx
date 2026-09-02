@@ -32,6 +32,13 @@ function ResetPasswordPageRedirect() {
     <>
       {!passwordChanged && (
       <>
+        <div className="logo-container">
+          <div className="logo-div">
+              <h1>Pocket<span>Flow</span>.</h1>
+              <h2>Expense tracking, simplified.</h2>
+              <hr></hr>
+          </div>
+        </div>
         <form className="reset-password-redirect-form" onSubmit={handleSubmit}>
            <div className="reset-password-form-header">
                     <h1>Reset Password</h1>

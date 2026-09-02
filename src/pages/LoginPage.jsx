@@ -42,6 +42,13 @@ function LoginPage() {
 
   return (
     <div className="login-container">
+      <div className="logo-container">
+        <div className="logo-div">
+            <h1>Pocket<span>Flow</span>.</h1>
+            <h2>Expense tracking, simplified.</h2>
+            <hr></hr>
+        </div>
+      </div>
       <form className="login-form" onSubmit={handleLogin}>
         <div className="login-form-header">
           <h1>Log in</h1>
@@ -57,22 +64,25 @@ function LoginPage() {
           <input name="password" type="password" value={password} onChange={e => setPassword(e.target.value)}></input>
         </label>
         {error && <p className="error-message">{error}</p>}
-        <button className="login-btn" type="submit">Log In</button>
-        <p>- or -</p>
-        <button className="try-anonymous-btn" onClick={handleClick}>Try without account</button>
+        <button className="login-btn" type="submit">Log In</button>        
         <Turnstile
           siteKey="0x4AAAAAAEjEg1WHD-FahuWt"
           onSuccess={(token) => {
               setCaptchaToken(token)
           }}
+          options={{
+            size: 'invisible',
+          }}
         />
+        <p>
+        Forgot Password? <Link to="/reset-password">Reset Password</Link>
+      </p>
+      <p>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+        <button className="try-anonymous-btn" onClick={handleClick}>Try it out</button>
+      </p>
       </form>
-      <p>
-        <Link to="/reset-password">Reset Password</Link>
-      </p>
-      <p>
-        <Link to="/signup">Sign Up</Link>
-      </p>
+      
     </div>
   );
 }

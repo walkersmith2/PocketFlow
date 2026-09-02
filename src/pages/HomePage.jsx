@@ -10,6 +10,7 @@ import LineChart from '../components/LineChart';
 import FilterBar from '../components/FilterBar';
 import SortBar from '../components/SortBar';
 import PersonIcon from '../assets/person-icon.svg?react';
+import AddCategoryForm from '../components/AddCategoryForm';
 
 
 function HomePage() {
@@ -22,6 +23,7 @@ function HomePage() {
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const [isPieChartVisible, setIsPieChartVisible] = useState(false);
+  const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
   const { session } = useAuth();
   const navigate = useNavigate();
 
@@ -168,6 +170,7 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
+      {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />}
       <header>
         <div className="logo-div">
           <h1>Pocket<span>Flow</span>.</h1>
@@ -176,7 +179,7 @@ function HomePage() {
         </div>
         <ul id="header-buttons-ul">
           <li>
-            <p>Logged in as {session.user.email || 'guest'}</p>
+            <p>Logged in as <b>{session.user.email || 'guest'}</b></p>
           </li>
           <li>
             <button className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
@@ -185,7 +188,7 @@ function HomePage() {
       </header>
       <main className="homepage-main">
         <div className="expense-cards-container">
-          <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory}/>
+          <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
           <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
           <ul className="expenses-ul">
             {
@@ -212,7 +215,7 @@ function HomePage() {
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
             <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
           </div>
-          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter} addCategory={addCategory} deleteCategory={deleteCategory} />
+          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
         </div>
       </main>
       <footer>

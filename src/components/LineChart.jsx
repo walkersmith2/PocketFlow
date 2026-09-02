@@ -189,8 +189,12 @@ function LineChart({ expenses, categories, dateFilter }) {
     
     return dataObject;
   }
-
-  return <Line data={getDataObject()} options={options} />;
+  return (
+    <>
+      {expenses.length > 0 ? 
+      <Line data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
+    </>
+  );
 }
 
 export default LineChart;
