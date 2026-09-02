@@ -1,4 +1,4 @@
-# PocketFlow Expense Tracker
+# Expense Tracker
 
 ## Overview
 This is a full stack application that lets users log and track their expenses. Features include adding, editing, and deleting expenses, visualizing expense history via charts, and filtering by dollar amount, category, and time period.
