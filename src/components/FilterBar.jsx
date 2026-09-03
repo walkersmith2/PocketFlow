@@ -115,25 +115,32 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
       </fieldset>
       <fieldset className="category-fieldset">
         <h2>Filter by category</h2>
-        <label>
-          <input name="filter-category" type="checkbox" value="all" checked={isAllChecked} onChange={handleAllOptionChange}/>
-          All
-        </label>
-        {categories.sort((a,b) => a.id - b.id).map((category) => (
-          <div key={category.id} className="category-div">
-            <div className="color-label" style={{backgroundColor: category.color}}></div>
-            <label key={category.id}>
-              <input name="filter-category" type="checkbox" value={category.id} checked={categoryFilter.has(category.id)} onChange={handleCategoryFilterChange}></input>
-              { editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }
-            </label>
-            <div className="btnDiv">
-              {editableCategory === category.id ? <button onClick={handleSaveCategoryClick} value={category.id}><SaveIcon /></button> :
-              <button value={category.id} onClick={handleEditCategoryClick} ><EditIcon /></button>}
-              <button className="deleteBtn" value={category.id} onClick={handleDeleteCategoryClick} disabled={nonEmptyCategories.has(category.id)}><DeleteIcon /></button>
+        <div className="category-div">
+          <div className="color-label" style={{backgroundColor: "rgba(0,0,0,0)"}}></div>
+          <label>
+            <input name="filter-category" type="checkbox" value="all" checked={isAllChecked} onChange={handleAllOptionChange}/>
+            All
+          </label>
+        </div>
+        <div className="categories-list">
+          {categories.sort((a,b) => a.id - b.id).map((category) => (
+            <div key={category.id} className="category-div">
+              <div className="color-label" style={{backgroundColor: category.color}}></div>
+              <label key={category.id}>
+                <input name="filter-category" type="checkbox" value={category.id} checked={categoryFilter.has(category.id)} onChange={handleCategoryFilterChange}></input>
+                { editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }
+              </label>
+              <div className="btnDiv">
+                {editableCategory === category.id ? <button onClick={handleSaveCategoryClick} value={category.id}><SaveIcon /></button> :
+                <button value={category.id} onClick={handleEditCategoryClick} ><EditIcon /></button>}
+                <button className="deleteBtn" value={category.id} onClick={handleDeleteCategoryClick} disabled={nonEmptyCategories.has(category.id)}><DeleteIcon /></button>
+              </div>
             </div>
-          </div>
-        ))}
-        <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
+          ))}
+        </div>
+        <div className="add-category-btn-container">
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
+        </div>
       </fieldset>
       <fieldset>
         <h2>Filter by amount</h2>
