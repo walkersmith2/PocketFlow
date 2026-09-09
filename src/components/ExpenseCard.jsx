@@ -27,9 +27,9 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, addCatego
                 <div className={styles.textDiv}>
                     <h2 >${expense.amount.toFixed(2)}</h2>
                     <div className={styles.subtitleDiv}>
-                        <p >{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric' })}</p>
-                        <p >{expense.description}</p>
-                        <p >{categories.find(category => category.id === expense.categoryId).category}</p>
+                        <p>{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        <p>{expense.description}</p>
+                        <p>{categories.find(category => category.id === expense.categoryId).category}</p>
                     </div>
                 </div>
                 <div className={styles.btnDiv}>

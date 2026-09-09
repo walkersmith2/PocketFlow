@@ -6,10 +6,6 @@
   padding: 0;
 }
 
-input[type="number"] {
-  font-size: 1.5rem;
-}
-
 header {
   display: flex;
   flex-direction: row;
@@ -18,16 +14,13 @@ header {
   justify-content: center;
   padding: 1rem 1rem 1rem 1rem;
   width: auto;
-  background-color: #16171d;
   background: none;
-  /* border: 1px solid red; */
 }
 
 .logo-div {
   text-align: start;
   height: fit-content;
   width: fit-content;
-  /* border: 1px solid white; */
 
   > * {
     padding: 0;
@@ -40,12 +33,11 @@ header {
   }
 
   h1 > * {
-    color: #39d798;
+    color: var(--accent);
     font-weight: 600;
   }
 
   h2 {
-    color: rgb(193, 193, 193);
     font-weight: 300;
   }
 
@@ -76,17 +68,6 @@ header {
 
 footer {
   padding: 1rem 0;
-}
-
-button {
-  background-color: rgb(63, 63, 63);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-button:hover {
-  background-color: rgb(96, 96, 96);
-  border-color: rgba(255, 255, 255, 1);
 }
 
 .header-btn {
@@ -120,7 +101,6 @@ button:hover {
   /* position: relative; */
   width: 100%;
   height: 50%;
-  background-color: rgba(60, 60, 60, 0.3);
   border-radius: 1rem;
   padding: 1rem;
   margin: 1rem 0;
@@ -128,9 +108,11 @@ button:hover {
 }
 
 .chart-view-container {
-  width: auto;
+  max-width: 100%;
+  min-width: 100%;
   height: 800px;
   margin: 0 1rem;
+  border: 1px solid blue;
 }
 
 .expense-cards-container {
@@ -154,7 +136,6 @@ button:hover {
 
 .add-expense-form-minimized {
   display: none;
-  background-color: rgba(255,255,225, 0.1);
   width: 100%;
   height: 2rem;
   border-radius: 0 0 0.5rem 0.5rem;
@@ -162,23 +143,22 @@ button:hover {
 
 .add-expense-form-container {
   position: absolute;
+  background-color: var(--bg);
+  border: 1px solid var(--text);
+  border-radius: 1rem;
   /* top: 13rem; */
 }
 
 .add-expense-form {
-  /* position: absolute;
-  top: 13rem; */
   display: flex;
   flex-direction: column;
   width: 300px;
-  background-color: rgb(72, 72, 72);
   border-radius: 0.5rem;
   flex-wrap: nowrap;
   padding: 0.8rem;
 
   label {
     margin: 0.3rem 0.5rem;
-    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -192,10 +172,6 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .amount-input-div {
-    font-size: 1.5rem;
   }
 
   .add-expense-submit-btn-div {
@@ -213,22 +189,6 @@ button:hover {
     font-weight: bold;
     width: 50%;
   }
-
-  .add-expense-submit-btn {
-    background-color: green;
-  }
-
-  .cancel-expense-submit-btn {
-    background-color: red;
-  }
-
-  .add-expense-submit-btn:hover {
-    background-color: rgb(5, 255, 5);
-  }
-
-  .cancel-expense-submit-btn:hover {
-    background-color: rgb(255, 86, 86);
-  }
 }
 
 .expenses-ul {
@@ -238,11 +198,11 @@ button:hover {
   padding: 0 1rem;
   margin: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 1rem;
+  border: 1px solid var(--text);
   flex-grow: 1;
   overflow-y: scroll;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
 }
 
 .login-form, .signup-form, .reset-password-form, .reset-password-redirect-form {
@@ -298,46 +258,49 @@ button:hover {
 }
 
 .filter-form {
+  max-width: 100%;
+  min-width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: start;
-  width: fit-content;
   justify-self: center;
 
   fieldset {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: start;
     height: 200px;
-    overflow-y: scroll;
-    border: none;
+    overflow: hidden;
+    border: 1px solid var(--text);
     border-radius: 1rem;
     padding: 1rem;
     margin: 0 0.5rem;
-    background-color: rgba(60, 60, 60, 0.3);
   }
 
   .category-fieldset {
     .show-add-category-component-btn {
       margin-top: auto;
     }
+
   }
 }
 
 .amount-total-container {
   padding: 1rem;
   font-size: 2rem;
-  color: white;
+  color: var(--text-h);
   font-weight: 600;
 }
 
 .add-category-form {
+  background-color: var(--bg) ;
   position: fixed;
   z-index: 2;
   height: 100%;
-  background-color: rgb(37, 37, 37);
-  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid  var(--text);
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -352,10 +315,6 @@ button:hover {
   button {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-  }
-
-  button:hover {
-    background-color: rgb(53, 53, 53);
   }
 }
 
@@ -373,13 +332,14 @@ button:hover {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
 
   .color-label {
     min-width: 1rem;
     height: 1rem;
     margin-right: 1rem;
     padding: 0;
+    border: 1px solid var(--text);
+    border-radius: 0.2rem;
   }
 
   
@@ -407,24 +367,7 @@ button:hover {
     border-radius: 0.5rem;
     padding: 0.4rem;
     margin: 0.2rem;
-    border: 0;
   }
-
-  .btnDiv button:hover {
-      background-color: rgb(121, 121, 121);
-  }
-
-  .btnDiv .deleteBtn {
-      background-color: rgb(204, 29, 29);
-  }
-
-  .btnDiv .deleteBtn:hover {
-      background-color: rgb(255, 36, 36);
-  }
-  
-  .btnDiv .deleteBtn:disabled {
-      background-color: rgba(204, 29, 29, 0.1);
-  } 
 }
 
 .empty-expenses-msg {
@@ -432,8 +375,8 @@ button:hover {
 }
 
 .show-add-category-component-btn {
-  border-radius: 0.2rem;
-  padding: 0.3rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   /* margin: 1rem 0; */
 }
 
@@ -446,4 +389,11 @@ button:hover {
 
 .categories-list {
   overflow-y: scroll;
+  
+}
+
+.category-text-div {
+  max-width: 5rem;
+  min-width: 5rem;
+  overflow: scroll;
 }

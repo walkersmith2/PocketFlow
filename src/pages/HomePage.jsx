@@ -209,7 +209,7 @@ function HomePage() {
           </div>
           <label>
             <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
-            Pie Chart View
+            Show Pie Chart
           </label>
           <div className="chart-container">
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 

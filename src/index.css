@@ -3,8 +3,7 @@
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
+  --accent: #39d798;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
@@ -36,8 +35,6 @@
     --text-h: #f3f4f6;
     --bg: #0f0f11;
     --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #39d798;
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
@@ -92,6 +89,20 @@ h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
+}
+
+button {
+  color: var(--text-h);
+  background-color: var(--bg);
+  border: 1px solid var(--text-h);
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+button:hover {
+  color: var(--bg);
+  background-color: var(--text-h);
+  border-color: var(--bg);
 }

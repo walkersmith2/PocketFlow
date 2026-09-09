@@ -29,6 +29,7 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
   function handleAddCategoryClick(e) {
     e.preventDefault();
     setIsAddCategoryFormVisible(prev => !prev);
+    
   }
 
   function handleDateFilterChange(e) {
@@ -116,19 +117,19 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
       <fieldset className="category-fieldset">
         <h2>Filter by category</h2>
         <div className="category-div">
-          <div className="color-label" style={{backgroundColor: "rgba(0,0,0,0)"}}></div>
           <label>
             <input name="filter-category" type="checkbox" value="all" checked={isAllChecked} onChange={handleAllOptionChange}/>
+            <div className="color-label" style={{backgroundColor: "rgba(0,0,0,0)"}}></div>
             All
           </label>
         </div>
         <div className="categories-list">
           {categories.sort((a,b) => a.id - b.id).map((category) => (
             <div key={category.id} className="category-div">
-              <div className="color-label" style={{backgroundColor: category.color}}></div>
               <label key={category.id}>
                 <input name="filter-category" type="checkbox" value={category.id} checked={categoryFilter.has(category.id)} onChange={handleCategoryFilterChange}></input>
-                { editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }
+                <div className="color-label" style={{backgroundColor: category.color}}></div>
+                <div className="category-text-div">{ editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }</div>
               </label>
               <div className="btnDiv">
                 {editableCategory === category.id ? <button onClick={handleSaveCategoryClick} value={category.id}><SaveIcon /></button> :
@@ -138,6 +139,7 @@ function FilterBar({ expenses, categories, visibleExpenses, setVisibleExpenses, 
             </div>
           ))}
         </div>
+        <p>{categoryFilter.size} of {categories.length} categories selected.</p>
         <div className="add-category-btn-container">
           <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
         </div>
