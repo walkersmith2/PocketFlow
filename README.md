@@ -10,3 +10,11 @@ This is a full stack application that lets users log and track their expenses. F
 - Add ability to add income
 
 
+- fix light mode
+- amount 0 stays - make placeholder or remove default value
+- sort by date: change to oldest to neweset
+- sort by amount - ascending vs descending
+- label graph as showing current view ("line chart")
+- category name too long --> decide how to keep css consistent
+- change line chart to bar graph
+- change to allow viewing weeks/months/days/years
