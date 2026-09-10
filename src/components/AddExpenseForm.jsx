@@ -31,7 +31,7 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
         <label>
           Amount
           <div className="amount-input-div">
-            $<input name="amount"  defaultValue={expense?.amount ?? 0} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
+            $<input name="amount"  defaultValue={expense?.amount} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
           </div>
         </label>
         <label>
@@ -40,7 +40,7 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
         </label>
         <label>
           Description
-          <input name="description" defaultValue={expense?.description ?? ""} className="description-input" type="text" required />
+          <input name="description" defaultValue={expense?.description ?? ""} className="description-input" type="text" required maxLength='50' />
         </label>
           
         <label className="category-label">

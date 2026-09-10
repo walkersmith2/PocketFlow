@@ -7,10 +7,14 @@ import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
 import LineChart from '../components/LineChart';
+import BarChart from '../components/BarChart';
 import FilterBar from '../components/FilterBar';
 import SortBar from '../components/SortBar';
-import PersonIcon from '../assets/person-icon.svg?react';
 import AddCategoryForm from '../components/AddCategoryForm';
+
+import PersonIcon from '../assets/person-icon.svg?react';
+import PieChartIcon from '../assets/pie-chart-fill.svg?react';
+import BarChartIcon from '../assets/bar-chart-fill.svg?react';
 
 
 function HomePage() {
@@ -27,6 +31,10 @@ function HomePage() {
   const { session } = useAuth();
   const navigate = useNavigate();
 
+  const rootStyles = window.getComputedStyle(document.body);
+  const chartToggleInactiveColor = rootStyles.getPropertyValue('--text').trim();
+  const chartToggleActiveColor = rootStyles.getPropertyValue('--text-h').trim();
+  
   useEffect(() => {
     getExpenses();
     getCategories();
@@ -206,15 +214,17 @@ function HomePage() {
         <div className="chart-view-container">
           <div className="amount-total-container">
             <p>Total Spent: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p>Viewing: {dateFilter}</p>
           </div>
-          <label>
-            <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
-            Show Pie Chart
-          </label>
           <div className="chart-container">
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
-            <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
+            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
           </div>
+          <p>Chart View</p>
+          <label className="chart-view-toggle">
+            <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
+            <div className="toggle-icons-container"><BarChartIcon className="bar-chart-icon" style={isPieChartVisible ? {fill: chartToggleInactiveColor} : {fill: chartToggleActiveColor} }/><PieChartIcon className="pie-chart-icon" style={isPieChartVisible ? {fill: chartToggleActiveColor} : {fill: chartToggleInactiveColor} }/></div>
+          </label>
           <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
         </div>
       </main>

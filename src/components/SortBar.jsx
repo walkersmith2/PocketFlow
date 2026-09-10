@@ -25,11 +25,11 @@ function SortBar({ sortCondition, setSortCondition }) {
             </select>
             <label>
                 <input type="radio" name="direction" value="ascending" checked={direction === "ascending"} onChange={handleDirectionChange}/>
-                Ascending
+                {condition === 'date' ? 'Oldest' : 'Ascending'}
             </label>
             <label>
                 <input type="radio" name="direction" value="descending" checked={direction === "descending"} onChange={handleDirectionChange}/>
-                Descending
+                {condition === 'date' ? 'Newest' : 'Descending'}
             </label>
         </form>
     );
