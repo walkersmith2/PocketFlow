@@ -2,7 +2,7 @@ import { useState } from 'react';
 import AddCategoryForm from './AddCategoryForm';
 
 // Takes optional expense prop in case the form is being used to edit an existing expense
-function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCategory, setIsAddCategoryFormVisible }) {
+function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categories, addCategory, setIsAddCategoryFormVisible }) {
 
   function handleCancel() {
     setIsVisible(false);
@@ -25,7 +25,7 @@ function AddExpenseForm({ setIsVisible, addExpense, expense, categories, addCate
   }
 
   return (
-    <div className='add-expense-form-container'>
+    <div className={`add-expense-form-container ${isVisible ? 'active' : ''}`}>
       <form className="add-expense-form" action={handleSubmit}>
         <input name="id" type="hidden" defaultValue={expense?.id ?? -1}></input>
         <label>

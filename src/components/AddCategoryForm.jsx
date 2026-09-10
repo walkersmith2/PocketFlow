@@ -6,11 +6,12 @@ const CATEGORY_COLORS = [
   '#FB5607',
   '#FF006E',
   '#d90b15',
-  '#8338EC',
+  '#ab7eeb',
+  '#6e07f5',
   '#3A86FF',
+  '#4557f8',
   '#39d798',
-  '#1CC202',
-  '#82C202',
+  '#008a05',
 ]
 
 
@@ -33,10 +34,11 @@ function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCatego
   return (
     <form className={`add-category-form ${isAddCategoryFormVisible ? 'active' : ''}`} action={handleSubmit}>
       <h2>Add New Category</h2>
-      <label>
+      <label className="category-name-label">
+        Name
         <input type="text" name="category" required value={category} maxLength='50' onChange={(e) => setCategory(e.target.value)}></input>
-        Category Name
       </label>
+      <p>Color</p>
       <div className="category-colors-list">
         {CATEGORY_COLORS.map((elem, index) => (
           <label className="category-form-color-input" key={index}>

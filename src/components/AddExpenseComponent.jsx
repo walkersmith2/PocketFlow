@@ -11,7 +11,7 @@ function AddExpenseComponent({ addExpense, categories, addCategory, setIsAddCate
     return (
         <div className="add-expense-component">
             <button className="add-expense-btn" onClick={handleBtnClick}>New Expense</button>
-            {isFormVisible ? (<AddExpenseForm setIsVisible={setIsFormVisible} addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />) : <div className="add-expense-form-minimized"></div>}
+            <AddExpenseForm setIsVisible={setIsFormVisible} isVisible={isFormVisible} addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
         </div>
     );
 }
