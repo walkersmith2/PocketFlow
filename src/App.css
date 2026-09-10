@@ -337,7 +337,7 @@ footer {
 }
 
 .add-category-form {
-  background-color: var(--bg) ;
+  background-color: var(--bg);
   position: fixed;
   z-index: 2;
   height: 100%;
@@ -347,6 +347,8 @@ footer {
   gap: 0.3rem;
   align-items: start;
   padding: 1rem;
+  transform: translateX(-110%);
+  transition: transform 0.3s ease-in-out;
 
   label {
     display: flex;
@@ -381,6 +383,11 @@ footer {
     }
   }
 }
+
+.add-category-form.active {
+  transform: translateX(0);
+}
+
 
 .sort-form {
   display: flex;

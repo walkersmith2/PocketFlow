@@ -14,7 +14,7 @@ const CATEGORY_COLORS = [
 ]
 
 
-function AddCategoryForm({ addCategory, setIsAddCategoryFormVisible }) {
+function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCategoryFormVisible }) {
   const [category, setCategory] = useState("");
   const [color, setColor] = useState("red");
 
@@ -31,7 +31,7 @@ function AddCategoryForm({ addCategory, setIsAddCategoryFormVisible }) {
   }
 
   return (
-    <form className="add-category-form" action={handleSubmit}>
+    <form className={`add-category-form ${isAddCategoryFormVisible ? 'active' : ''}`} action={handleSubmit}>
       <h2>Add New Category</h2>
       <label>
         <input type="text" name="category" required value={category} maxLength='50' onChange={(e) => setCategory(e.target.value)}></input>

@@ -178,7 +178,7 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
-      {isAddCategoryFormVisible && <AddCategoryForm addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />}
+      <AddCategoryForm addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
       <header>
         <div className="logo-div">
           <h1>Pocket<span>Flow</span>.</h1>
