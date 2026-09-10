@@ -214,7 +214,6 @@ function HomePage() {
         <div className="chart-view-container">
           <div className="amount-total-container">
             <p>Total Spent: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-            <p>Viewing: {dateFilter}</p>
           </div>
           <div className="chart-container">
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
