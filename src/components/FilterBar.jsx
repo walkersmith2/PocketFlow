@@ -19,7 +19,7 @@ const dateBody = [
   },
   {
     value: 'all',
-    text: 'All time',
+    text: 'All Time',
   },
 ];
 
