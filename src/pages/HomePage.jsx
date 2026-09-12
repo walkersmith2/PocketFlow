@@ -6,16 +6,14 @@ import { supabase } from '../supabaseClient';
 import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
-import LineChart from '../components/LineChart';
 import BarChart from '../components/BarChart';
-import FilterBar from '../components/FilterBar';
 import SortBar from '../components/SortBar';
 import AddCategoryForm from '../components/AddCategoryForm';
+import FilterBar from '../components/FilterBar';
+import CategoriesComponent from '../components/CategoriesComponent';
 
-import PersonIcon from '../assets/person-icon.svg?react';
 import PieChartIcon from '../assets/pie-chart-fill.svg?react';
 import BarChartIcon from '../assets/bar-chart-fill.svg?react';
-
 
 function HomePage() {
 
@@ -23,7 +21,7 @@ function HomePage() {
   const [categories, setCategories] = useState([]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
   const [dateFilter, setDateFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState(new Set(categories.map((category) => category.id)));
+  const [categoryFilter, setCategoryFilter] = useState(new Set());
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const [isPieChartVisible, setIsPieChartVisible] = useState(false);
@@ -39,6 +37,12 @@ function HomePage() {
     getExpenses();
     getCategories();
   }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCategoryFilter(new Set(categories.map((category) => category.id)));
+    }
+  }, [categories]);
 
   useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter, sortCondition]);
 
@@ -178,6 +182,7 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
+      <CategoriesComponent expenses={expenses} categories={categories} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
       <AddCategoryForm addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
       <header>
         <div className="logo-div">
@@ -212,6 +217,7 @@ function HomePage() {
           <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}.</p>
         </div>
         <div className="chart-view-container">
+          <FilterBar categories={categories} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
           <div className="amount-total-container">
             <p>Total Spent: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
@@ -224,7 +230,6 @@ function HomePage() {
             <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
             <div className="toggle-icons-container"><BarChartIcon className="bar-chart-icon" style={isPieChartVisible ? {fill: chartToggleInactiveColor} : {fill: chartToggleActiveColor} }/><PieChartIcon className="pie-chart-icon" style={isPieChartVisible ? {fill: chartToggleActiveColor} : {fill: chartToggleInactiveColor} }/></div>
           </label>
-          <FilterBar expenses={expenses} categories={categories} visibleExpenses={visibleExpenses} setVisibleExpenses={setVisibleExpenses} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
         </div>
       </main>
       <footer>

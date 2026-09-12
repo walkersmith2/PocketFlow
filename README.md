@@ -9,5 +9,4 @@ This is a full stack application that lets users log and track their expenses. F
     - track whether user goes over/under budget
 - Add ability to add income
 - allow category color to be edited
-- convert filters to drop down menu bar
 - change to allow viewing weeks/months/days/years

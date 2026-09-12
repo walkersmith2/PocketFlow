@@ -106,3 +106,8 @@ button:hover {
   background-color: var(--text-h);
   border-color: var(--bg);
 }
+
+button:disabled {
+  color: var(--text);
+  border-color: var(--text);
+}
