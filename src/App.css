@@ -437,7 +437,7 @@ footer {
 }
 
 .categories-component-container.active {
-  transform: translateX(95%);
+  transform: translateX(91%);
 }
 
 .categories-component {
@@ -614,4 +614,11 @@ footer {
 
 .filter-bar .reset-filters-btn.active {
   display: block;
+}
+
+.expand-categories-component-btn {
+  writing-mode: vertical-rl;
+  font-size: 1rem;
+  padding: 1rem 0.5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
 }

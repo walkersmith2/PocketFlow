@@ -92,7 +92,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
 
   return (
     <div className={`categories-component-container ${isActive ? 'active' : ''}`}>
-      <button type="button" onClick={handleMinimize}><CaretLeftIcon /></button>
+      <button className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>View Categories</span><CaretLeftIcon /></button>
       <div className="categories-component">
         <h2>Categories</h2>
         <div className="categories-list">
