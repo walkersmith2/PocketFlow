@@ -4,7 +4,7 @@ import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import AddExpenseForm from './AddExpenseForm';
 
-function ExpenseCard({ expense, addExpense, deleteExpense, categories, addCategory }) {
+function ExpenseCard({ expense, addExpense, deleteExpense, categories, setIsAddCategoryFormVisible }) {
     const [isEditable, setIsEditable] = useState(false);
 
     function handleEdit() {
@@ -20,7 +20,7 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, addCatego
     return (
         <>
         {isEditable ? 
-        <AddExpenseForm setIsVisible={setIsEditable} addExpense={addExpense} expense={expense} categories={categories}  addCategory={addCategory}/> :
+        <AddExpenseForm setIsVisible={setIsEditable} isVisible={isEditable} addExpense={addExpense} expense={expense} categories={categories} isEditExpenseForm={true} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible}/> :
         <div className={styles.expenseCardContainer}>
             <div className={styles.colorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></div>
             <div className={styles.expenseCard}>

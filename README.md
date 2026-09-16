@@ -5,8 +5,9 @@ This is a full stack application that lets users log and track their expenses. F
 
 ## Planned features to add
 - Filter expenses by custom date range
+- change sort appearance
 - Set monthly budget for each category
     - track whether user goes over/under budget
 - Add ability to add income
-- allow category color to be edited
+- clicking away should minimize menu
 - change to allow viewing weeks/months/days/years

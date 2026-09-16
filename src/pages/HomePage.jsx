@@ -15,6 +15,19 @@ import CategoriesComponent from '../components/CategoriesComponent';
 import PieChartIcon from '../assets/pie-chart-fill.svg?react';
 import BarChartIcon from '../assets/bar-chart-fill.svg?react';
 
+const CATEGORY_COLORS = [
+  '#FFBE0B',
+  '#FB5607',
+  '#FF006E',
+  '#d90b15',
+  '#ab7eeb',
+  '#6e07f5',
+  '#3A86FF',
+  '#4557f8',
+  '#b6ff18',
+  '#008a05',
+]
+
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
@@ -182,8 +195,8 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
-      <CategoriesComponent expenses={expenses} categories={categories} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
-      <AddCategoryForm addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
+      <CategoriesComponent expenses={expenses} categories={categories} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} CATEGORY_COLORS={CATEGORY_COLORS}/>
+      <AddCategoryForm CATEGORY_COLORS={CATEGORY_COLORS} addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
       <header>
         <div className="logo-div">
           <h1>Pocket<span>Flow</span>.</h1>
@@ -208,13 +221,13 @@ function HomePage() {
               visibleExpenses.length > 0 ?
               visibleExpenses.map((expense, index) => (
                   <li key={expense.id}>
-                  <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory}/>
+                  <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible}/>
                   </li>
               )) :
-              <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters under the chart.</div></li>
+              <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters above the chart.</div></li>
             }
           </ul>
-          <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}.</p>
+          <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
         <div className="chart-view-container">
           <FilterBar categories={categories} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />

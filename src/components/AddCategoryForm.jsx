@@ -1,21 +1,6 @@
 import { useState } from 'react';
 
-
-const CATEGORY_COLORS = [
-  '#FFBE0B',
-  '#FB5607',
-  '#FF006E',
-  '#d90b15',
-  '#ab7eeb',
-  '#6e07f5',
-  '#3A86FF',
-  '#4557f8',
-  '#39d798',
-  '#008a05',
-]
-
-
-function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCategoryFormVisible }) {
+function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCategoryFormVisible, CATEGORY_COLORS }) {
   const [category, setCategory] = useState("");
   const [color, setColor] = useState("red");
 
@@ -33,7 +18,7 @@ function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCatego
 
   return (
     <form className={`add-category-form ${isAddCategoryFormVisible ? 'active' : ''}`} action={handleSubmit}>
-      <h2>Add New Category</h2>
+      <h2>New Category</h2>
       <label className="category-name-label">
         Name
         <input type="text" name="category" required value={category} maxLength='50' onChange={(e) => setCategory(e.target.value)}></input>

@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import AddCategoryForm from './AddCategoryForm';
-
 // Takes optional expense prop in case the form is being used to edit an existing expense
-function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categories, addCategory, setIsAddCategoryFormVisible }) {
+function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categories, setIsAddCategoryFormVisible, isEditExpenseForm }) {
 
   function handleCancel() {
     setIsVisible(false);
@@ -25,13 +22,13 @@ function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categori
   }
 
   return (
-    <div className={`add-expense-form-container ${isVisible ? 'active' : ''}`}>
+    <div className={`add-expense-form-container ${isVisible ? 'active' : ''} ${isEditExpenseForm ? 'edit-expense' : ''}`}>
       <form className="add-expense-form" action={handleSubmit}>
         <input name="id" type="hidden" defaultValue={expense?.id ?? -1}></input>
         <label>
           Amount
           <div className="amount-input-div">
-            $<input name="amount"  defaultValue={expense?.amount} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
+            $<input name="amount"  defaultValue={expense?.amount?.toFixed(2)} className="amount-input" type="number" min="0.01" max="999999.99" step="0.01" required />
           </div>
         </label>
         <label>
@@ -42,13 +39,12 @@ function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categori
           Description
           <input name="description" defaultValue={expense?.description ?? ""} className="description-input" type="text" required maxLength='50' />
         </label>
-          
         <label className="category-label">
           Category
           <select name="categoryId" defaultValue={expense?.categoryId ?? 0} className="category-select" required>
             { categories.map((category) => (<option key={category.id} value={category.id}>{category.category}</option>)) }
           </select>
-          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>New Category</button>
         </label>
         <div className="add-expense-submit-btn-div">
             <button className="add-expense-submit-btn" type="submit">{expense ? 'Save' : 'Add'}</button>

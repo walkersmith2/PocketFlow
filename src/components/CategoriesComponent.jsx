@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 
+import EditCategoryColor from '../components/EditCategoryColor';
+
 import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import SaveIcon from '../assets/check-lg-icon.svg?react';
 import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
 
-function CategoriesComponent({ expenses, categories, categoryFilter, setCategoryFilter, addCategory, deleteCategory, setIsAddCategoryFormVisible }) {
+function CategoriesComponent({ expenses, categories, categoryFilter, setCategoryFilter, addCategory, deleteCategory, setIsAddCategoryFormVisible, CATEGORY_COLORS }) {
   const [editableCategory, setEditableCategory] = useState();
   const [editableCategoryText, setEditableCategoryText] = useState("");
+  const [editableCategoryColor, setEditableCategoryColor] = useState("");
   const [nonEmptyCategories, setNonEmptyCategories] = useState();
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     setCategoryFilter(prev => {
@@ -62,6 +65,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
     if(!editableCategory) {
       setEditableCategory(id);
       setEditableCategoryText(categories.find(category => id === category.id).category);
+      setEditableCategoryColor(categories.find(category => id === category.id).color);
     }
     console.log("editing", id);
   }
@@ -69,9 +73,11 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
   function handleSaveCategoryClick(e) {
     e.preventDefault();
     const id = Number(e.currentTarget.value);
-    addCategory(id, editableCategoryText, categories.find(category => id === category.id).color);
+    addCategory(id, editableCategoryText, editableCategoryColor);
     setEditableCategory(null);
     console.log("saved", id);
+    console.log(editableCategoryText);
+    console.log(editableCategoryColor);
   }
 
   function handleDeleteCategoryClick(e) {
@@ -92,13 +98,13 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
 
   return (
     <div className={`categories-component-container ${isActive ? 'active' : ''}`}>
-      <button className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>View Categories</span><CaretLeftIcon /></button>
+      <button className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>{isActive ? 'Hide' : 'View'} Categories</span><CaretLeftIcon className="caret-left-icon"/></button>
       <div className="categories-component">
         <h2>Categories</h2>
         <div className="categories-list">
           {categories.sort((a,b) => a.id - b.id).map((category) => (
             <div key={category.id} className="category-div">
-                <div className="color-label" style={{backgroundColor: category.color}}></div>
+                {editableCategory === category.id ? <EditCategoryColor CATEGORY_COLORS={CATEGORY_COLORS} editableCategoryColor={editableCategoryColor} setEditableCategoryColor={setEditableCategoryColor}/> : <div className="color-label" style={{backgroundColor: category.color}}></div>}
                 <div className="category-text-div">{ editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }</div>
               <div className="btnDiv">
                 {editableCategory === category.id ? <button onClick={handleSaveCategoryClick} value={category.id}><SaveIcon /></button> :
@@ -110,7 +116,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
         </div>
         <p>{categories.length} categories</p>
         <div className="add-category-btn-container">
-          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>Add New Category</button>
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>New Category</button>
         </div>
       </div>
     </div>

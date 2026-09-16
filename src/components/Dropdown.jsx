@@ -26,7 +26,7 @@ function Dropdown({ name, header, type, body, activeDropdown, setActiveDropdown,
     */
     return (
         <div className='dropdown'>
-            <button type='button' className='dropdown-header' onClick={handleClick}>{header} <CaretDownIcon width='0.7rem' /></button>
+            <button type='button' className={`dropdown-header ${isExpanded ? 'expanded' : ''}`} onClick={handleClick}>{header} <CaretDownIcon className="caret-down-icon" width='0.7rem' /></button>
             <div className={`dropdown-body ${isExpanded ? 'expanded' : ''}`}>
                 <div className='dropdown-body-inner'>
                     {body.map((elem, idx) => (

@@ -170,6 +170,12 @@ footer {
   width: 300px;
 }
 
+.add-expense-component.active {
+  .caret-down-icon {
+    transform: rotate(-180deg);
+  }
+}
+
 .add-expense-btn {
   width: 100%;
   border-radius: 0.5rem;
@@ -192,6 +198,13 @@ footer {
   height: 0;
   overflow: hidden;
   transition: height 0.3s ease;
+}
+
+.add-expense-form-container.active.edit-expense {
+  position: static;
+  width: auto;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
 }
 
 .add-expense-form-container.active {
@@ -391,11 +404,12 @@ footer {
   p {
     align-self: start;
   }
-  .category-colors-list {
-    display: flex;
-    width: 12rem;
-    flex-wrap: wrap;
-  }
+}
+
+.category-colors-list {
+  display: flex;
+  width: 12rem;
+  flex-wrap: wrap;
 
   .category-form-color-input {
     input {
@@ -415,14 +429,41 @@ footer {
   }
 }
 
+.edit-category-color-btn {
+  padding: 0;
+  margin: 0;
+  width: fit-content;
+  height: fit-content;
+  border: none;  
+  width: fit-content;
+  background-color: var(--bg);
+} 
+
+.edit-category-color-btn:hover {
+  background-color: var(--bg);
+}
+
+.category-colors-list.edit-category-color {
+  label {
+    width: fit-content;
+    margin: 0.2rem;
+  }
+
+  position: absolute;
+  border: 1px solid var(--text);
+  background-color: var(--bg);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .add-category-form.active {
   transform: translateX(0);
 }
 
-
-
 .categories-component-container {
-  background-color: var(--bg);
+  background-color: transparent;
   position: fixed;
   right: 1rem;
   display: flex;
@@ -431,15 +472,19 @@ footer {
   z-index: 1000;
   height: 100%;
   margin: 0;
-  transform: translateX(0%);
+  transform: translateX(91%);
   transition: transform 0.3s ease-in-out;
 }
 
 .categories-component-container.active {
-  transform: translateX(91%);
+  transform: translateX(0%);
+  .caret-left-icon {
+    transform: rotate(180deg);
+  }
 }
 
 .categories-component {
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -563,14 +608,22 @@ footer {
     }
   }
 
+  .dropdown-header.expanded {
+    .caret-down-icon {
+      transform: rotate(-180deg);
+    }
+  }
+  
   .dropdown-body.expanded {
     z-index: 100;
     border-color: var(--text);
     padding: 0.7rem 0.5rem;
     grid-template-rows: 1fr;
   }
-
+  
+  
 }
+
 
 .dropdown-body-inner {
   min-height: 0;
