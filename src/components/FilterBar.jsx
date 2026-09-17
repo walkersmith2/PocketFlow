@@ -100,7 +100,7 @@ function FilterBar({ categories, dateFilter, setDateFilter, categoryFilter, setC
 
   return (
     <div className="filter-bar">
-      <FilterIcon className="filter-icon"/>
+      <FilterIcon className="filter-icon"/> Filter By:
       <Dropdown name='date' header={dateFilter === 'all' ? 'Date' : `This ${dateFilter}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={dateFilter} handleFilterChange={handleDateFilterChange} />
       <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
       <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>

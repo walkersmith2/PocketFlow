@@ -590,7 +590,7 @@ footer {
   .dropdown-body {
     position: absolute;
     color: var(--text);
-    background-color: var(--bg);
+    background-color: transparent;
     border: 1px solid transparent;
     border-radius: 0.3rem;
     width: 200px;
@@ -616,6 +616,7 @@ footer {
   
   .dropdown-body.expanded {
     z-index: 100;
+    background-color: var(--bg);
     border-color: var(--text);
     padding: 0.7rem 0.5rem;
     grid-template-rows: 1fr;
@@ -685,6 +686,10 @@ footer {
   }
   background-color: var(--text-h);
   border-color: var(--bg);
+}
+
+.filter-bar {
+  color: var(--text-h);
 }
 
 .filter-icon {

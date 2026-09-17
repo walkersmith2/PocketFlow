@@ -245,9 +245,9 @@ function HomePage() {
           </label>
         </div>
       </main>
-      <footer>
+      {/* <footer>
         <p>Walker Smith 2026</p>
-      </footer>
+      </footer> */}
     </div>
   );
 }

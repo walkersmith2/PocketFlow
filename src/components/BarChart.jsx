@@ -221,7 +221,7 @@ function BarChart({ expenses, categories, dateFilter }) {
     <>
       <label>
         <input type="checkbox" checked={areCategoryLinesVisible} onChange={handleChartToggleChange}></input>
-        Show category breakdown
+        Show Category Breakdown
       </label>
       {expenses.length > 0 ? 
       <Bar data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
