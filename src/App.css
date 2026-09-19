@@ -100,7 +100,6 @@ footer {
 .chart-view-container {
   max-width: 100%;
   min-width: 100%;
-  height: auto;
   margin: 0 1rem;
   padding: 1rem;
   padding-bottom: 4rem;
@@ -366,14 +365,26 @@ footer {
   border-radius:  1rem; */
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
   font-size: 1.5rem;
   color: var(--text-h);
   font-weight: 600;
+  justify-content: space-between;
+  
+  .date-display {
+    border: 1px solid var(--text);
+    border-radius: 1rem;
+    width: 12rem;
+    padding: 1rem 0.7rem;
+    white-space: nowrap;
+    overflow: scroll;
+  }
 
   .date-button-div {
+    /* border: 1px solid var(--text); */
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -383,7 +394,7 @@ footer {
   button {
     display: flex;
     align-items: center;
-    padding: 0.2rem;
+    padding: 0.5rem;
     border-radius: 0.2rem;
   }
 }

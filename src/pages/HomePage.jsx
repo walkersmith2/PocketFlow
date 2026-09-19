@@ -33,7 +33,6 @@ const CATEGORY_COLORS = [
 const monthlyBudget = 10000;
 
 
-
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
@@ -158,16 +157,15 @@ function HomePage() {
   function updateVisibleExpenses() {
     let filteredExpenses = [...expenses];
 
-    // Apply date filter
-    const today = new Date();
+    // Apply dateFilter
     filteredExpenses = filteredExpenses.filter((expense) => {
       const expenseDate = new Date(expense.date + "T00:00:00");
       if(timePeriodFilter == "month") {
-        return expenseDate.getMonth() === today.getMonth() &&
-        expenseDate.getFullYear() === today.getFullYear();
+        return expenseDate.getMonth() === dateFilter.getMonth() &&
+        expenseDate.getFullYear() === dateFilter.getFullYear();
       }
       else if(timePeriodFilter == "year") {
-        return expenseDate.getFullYear() === today.getFullYear();
+        return expenseDate.getFullYear() === dateFilter.getFullYear();
       }
       return true;
     });
@@ -232,10 +230,12 @@ function HomePage() {
         <div className="chart-view-container">
           <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
           <div className="date-container">
-            Jan 2026
+            <span className="date-display">
+              {timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}
+            </span>
             <div className='date-button-div'>
-              <button type='button'><CaretLeftIcon /></button>
-              <button type='button'><CaretRightIcon /></button>
+              <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()) : new Date(prev.getFullYear() - 1, prev.getMonth(), prev.getDate()))}><CaretLeftIcon /></button>
+              <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() + 1, prev.getDate()) : new Date(prev.getFullYear() + 1, prev.getMonth(), prev.getDate()))}><CaretRightIcon /></button>
             </div>
           </div>
           <div className="amount-total-container">
@@ -243,7 +243,7 @@ function HomePage() {
           </div>
           <div className="chart-container">
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
-            <BarChart expenses={visibleExpenses} categories={categories} timePeriodFilter={timePeriodFilter}/>}
+            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter}/>}
           </div>
           <p>Chart View</p>
           <label className="chart-view-toggle">

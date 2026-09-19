@@ -25,7 +25,7 @@ const accentColor = rootStyles.getPropertyValue('--accent').trim();
 
 export const options = {
   responsive: true,
-  animations: false,
+  animation: false,
   plugins: {
     legend: {
       position: 'top',
@@ -38,6 +38,7 @@ export const options = {
       },
     },
     y: {
+      beginAtZero: true,
       grid: {
         display: false,
       },
@@ -47,6 +48,8 @@ export const options = {
 
 function BarChart({ expenses, categories, dateFilter, timePeriodFilter }) {
 
+  const rootStyles = window.getComputedStyle(document.body);
+  const budgetColor = rootStyles.getPropertyValue('--text-h').trim() + '40';
   const [areCategoryLinesVisible, setAreCategoryLinesVisible] = useState(false);
 
   function handleChartToggleChange(e) {
@@ -90,24 +93,41 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter }) {
       datasets.push(
         {
           id: -1,
-          label: 'All categories',
+          label: 'actual',
           data: [],
           borderColor: COLOR_MAP[-1],
           backgroundColor: COLOR_MAP[-1],
+          order: 1,
+          grouped: false,
         }
       );
+      datasets.push(
+        {
+          id: -1,
+          label: 'budget',
+          data: [5000,5000,5000,5000,5000,5000,5000,2000,2000,2000,2000,2000],
+          borderColor: COLOR_MAP[-1] + '40',
+          backgroundColor: COLOR_MAP[-1] + '40',
+          order: 2,
+          grouped: false,
+        }
+      );
+      
     }
     
 
     // get labels array (based on timePeriodFilter)
-    if(timePeriodFilter === "month") {
-      const daysInCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    if(timePeriodFilter === 'month') {
+      const year = dateFilter.getFullYear();
+      const month = dateFilter.getMonth();
+      const daysInCurrentMonth = new Date(year, month + 1, 0).getDate();
       labels = Array.from({ length: daysInCurrentMonth }, (_, index) => index + 1);
       labels.forEach((day, index) => {
         const currentDayExpenses = expenses.filter((expense) => {
           const expenseDate = new Date(expense.date + "T00:00:00");
-          const dayOfMonth = expenseDate.getDate();
-          return dayOfMonth === day;
+          return expenseDate.getDate() === day
+          && expenseDate.getMonth() === month
+          && expenseDate.getFullYear() === year;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
         if(areCategoryLinesVisible) {
@@ -121,8 +141,8 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter }) {
         }
       });
     }
-    if(timePeriodFilter === "year") {
-      const year = new Date().getFullYear();
+    if(timePeriodFilter === 'year') {
+      const year = new Date(dateFilter).getFullYear();
       // const daysInCurrentYear = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
       labels = Array.from({ length: 12 }, (_, index) => {
         const date = new Date(year, index, 1);
@@ -133,13 +153,12 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter }) {
           const expenseDate = new Date(expense.date + "T00:00:00");
           const currentExpenseMonth = expenseDate.getMonth();
           const currentExpenseYear = expenseDate.getFullYear();
-          console.log("date: ", expenseDate.getMonth(), " ", expenseDate.getFullYear());
           return currentExpenseMonth === index && currentExpenseYear === year;
         });
         const expensesTotal = currentMonthExpenses.reduce((total, expense) => total + expense.amount, 0);
         if(areCategoryLinesVisible) {
           activeCategories.forEach((categoryId) => {
-            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
+            const catTotal = currentMonthExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
             datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
           })
         }

@@ -40,7 +40,7 @@ function SortBar({ sortCondition, setSortCondition }) {
 
   return (
     <div className="sort-bar">
-      <Dropdown name='sort' header='Sort By' type='radio' body={sortBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={condition} handleFilterChange={handleConditionChange}/>
+      <Dropdown name='sort' header={`Sort By: ${condition}`} type='radio' body={sortBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={condition} handleFilterChange={handleConditionChange}/>
       <label className="sort-direction-toggle">
         <input type="checkbox" checked={direction === "descending"} onChange={handleDirectionChange}/>
         {direction === 'descending' ? <SortDownIcon className="sort-down-icon"/> : <SortDownAltIcon className="sort-down-alt-icon"/>}
