@@ -6,20 +6,12 @@ import XIcon from '../assets/x-lg.svg?react';
 
 const dateBody = [
   {
-    value: 'week',
-    text: 'This Week',
-  },
-  {
     value: 'month',
-    text: 'This Month',
+    text: 'Month',
   },
   {
     value: 'year',
-    text: 'This Year',
-  },
-  {
-    value: 'all',
-    text: 'All Time',
+    text: 'Year',
   },
 ];
 
@@ -42,10 +34,10 @@ const amountBody = [
   },
 ];
 
-function FilterBar({ categories, dateFilter, setDateFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter }) {
+function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter }) {
   const [activeDropdown, setActiveDropdown] = useState('');
   const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.id));
-  const resetActive = dateFilter !== 'all' || amountFilter !== 1000000 || !isAllChecked;
+  const resetActive = timePeriodFilter !== 'month' || amountFilter !== 1000000 || !isAllChecked;
   console.log(resetActive);
   const categoriesBody = [
     {
@@ -59,8 +51,8 @@ function FilterBar({ categories, dateFilter, setDateFilter, categoryFilter, setC
   ];
   
 
-  function handleDateFilterChange(e) {
-    setDateFilter(e.target.value);
+  function handletimePeriodFilterChange(e) {
+    setTimePeriodFilter(e.target.value);
   }
 
   function handleAllOptionChange(e) {
@@ -93,7 +85,7 @@ function FilterBar({ categories, dateFilter, setDateFilter, categoryFilter, setC
   function handleReset(e) {
     e.preventDefault();
     setActiveDropdown('');
-    setDateFilter('all');
+    setTimePeriodFilter('month');
     setAmountFilter(1000000);
     setCategoryFilter(new Set(categories.map((category) => category.id)));
   }
@@ -101,7 +93,7 @@ function FilterBar({ categories, dateFilter, setDateFilter, categoryFilter, setC
   return (
     <div className="filter-bar">
       <FilterIcon className="filter-icon"/> Filter By:
-      <Dropdown name='date' header={dateFilter === 'all' ? 'Date' : `This ${dateFilter}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={dateFilter} handleFilterChange={handleDateFilterChange} />
+      <Dropdown name='date' header={`Time Period: ${timePeriodFilter}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
       <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
       <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>
       <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}>Reset Filters <XIcon /></button>

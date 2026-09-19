@@ -361,11 +361,46 @@ footer {
   }
 }
 
+.date-container {
+  /* border: 1px solid var(--text);
+  border-radius:  1rem; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  color: var(--text-h);
+  font-weight: 600;
+
+  .date-button-div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    border-radius: 0.2rem;
+  }
+}
+
 .amount-total-container {
   padding: 1rem;
   font-size: 2rem;
   color: var(--text-h);
   font-weight: 600;
+
+  .expense-total-span.under-budget {
+    color: var(--accent);
+  }
+
+  .expense-total-span.over-budget {
+    color: red;
+  }
 }
 
 .add-category-form {

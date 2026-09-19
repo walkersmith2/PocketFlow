@@ -14,6 +14,8 @@ import CategoriesComponent from '../components/CategoriesComponent';
 
 import PieChartIcon from '../assets/pie-chart-fill.svg?react';
 import BarChartIcon from '../assets/bar-chart-fill.svg?react';
+import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
+import CaretRightIcon from '../assets/caret-right-fill.svg?react';
 
 const CATEGORY_COLORS = [
   '#FFBE0B',
@@ -26,14 +28,19 @@ const CATEGORY_COLORS = [
   '#4557f8',
   '#b6ff18',
   '#008a05',
-]
+];
+
+const monthlyBudget = 10000;
+
+
 
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [visibleExpenses, setVisibleExpenses] = useState([]);
-  const [dateFilter, setDateFilter] = useState("all");
+  const [timePeriodFilter, setTimePeriodFilter] = useState('month');
+  const [dateFilter, setDateFilter] = useState(new Date());
   const [categoryFilter, setCategoryFilter] = useState(new Set());
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
@@ -57,7 +64,7 @@ function HomePage() {
     }
   }, [categories]);
 
-  useEffect(updateVisibleExpenses,[expenses, dateFilter, categoryFilter, amountFilter, sortCondition]);
+  useEffect(updateVisibleExpenses,[expenses, dateFilter, timePeriodFilter, categoryFilter, amountFilter, sortCondition]);
 
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
@@ -155,18 +162,11 @@ function HomePage() {
     const today = new Date();
     filteredExpenses = filteredExpenses.filter((expense) => {
       const expenseDate = new Date(expense.date + "T00:00:00");
-
-      if(dateFilter == "week") {
-        const start = new Date(today);
-        start.setHours(0, 0, 0, 0);
-        start.setDate(today.getDate() - today.getDay());
-        return expenseDate >= start;
-      }
-      else if(dateFilter == "month") {
+      if(timePeriodFilter == "month") {
         return expenseDate.getMonth() === today.getMonth() &&
         expenseDate.getFullYear() === today.getFullYear();
       }
-      else if(dateFilter == "year") {
+      else if(timePeriodFilter == "year") {
         return expenseDate.getFullYear() === today.getFullYear();
       }
       return true;
@@ -230,13 +230,20 @@ function HomePage() {
           <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
         <div className="chart-view-container">
-          <FilterBar categories={categories} dateFilter={dateFilter} setDateFilter={setDateFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
+          <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
+          <div className="date-container">
+            Jan 2026
+            <div className='date-button-div'>
+              <button type='button'><CaretLeftIcon /></button>
+              <button type='button'><CaretRightIcon /></button>
+            </div>
+          </div>
           <div className="amount-total-container">
-            <p>Total Spent: ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <p>Total Spent: <span className={`expense-total-span ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudget ? 'under-budget' : 'over-budget'}`}>${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> of <span className="budget-span">${monthlyBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></p>
           </div>
           <div className="chart-container">
             {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
-            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter}/>}
+            <BarChart expenses={visibleExpenses} categories={categories} timePeriodFilter={timePeriodFilter}/>}
           </div>
           <p>Chart View</p>
           <label className="chart-view-toggle">
