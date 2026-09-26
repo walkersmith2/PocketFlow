@@ -25,7 +25,6 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
       expenses.forEach(expense => newSet.add(expense.categoryId));
       return newSet;
     });
-    console.log("nonempty: ", nonEmptyCategories)
   }, [categories]);
   
   const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.id));
@@ -67,7 +66,6 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
       setEditableCategoryText(categories.find(category => id === category.id).category);
       setEditableCategoryColor(categories.find(category => id === category.id).color);
     }
-    console.log("editing", id);
   }
 
   function handleSaveCategoryClick(e) {
@@ -75,16 +73,12 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
     const id = Number(e.currentTarget.value);
     addCategory(id, editableCategoryText, editableCategoryColor);
     setEditableCategory(null);
-    console.log("saved", id);
-    console.log(editableCategoryText);
-    console.log(editableCategoryColor);
   }
 
   function handleDeleteCategoryClick(e) {
     e.preventDefault();
     const id = e.currentTarget.value;
     deleteCategory(id);
-    console.log("delete");
   }
 
   function handleEditableCategoryTextChange(e) {

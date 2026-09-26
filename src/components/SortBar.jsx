@@ -24,7 +24,6 @@ function SortBar({ sortCondition, setSortCondition }) {
   function handleConditionChange(e) {
     setCondition(e.target.value);
     setSortCondition(`${e.target.value}-${direction}`);
-    console.log("set condition: ", `${e.target.value}-${direction}`);
   }
 
   function handleDirectionChange(e) {

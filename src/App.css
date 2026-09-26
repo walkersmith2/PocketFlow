@@ -414,6 +414,11 @@ footer {
   }
 }
 
+.edit-budget-input {
+  font-size: 2rem;
+  width: 5rem;
+}
+
 .add-category-form {
   background-color: var(--bg);
   position: fixed;
@@ -581,20 +586,29 @@ footer {
     }
   }
 
-  .btnDiv {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    padding-left: 0.5rem;
-  }
+}
 
-  .btnDiv button {
-    border-radius: 0.5rem;
-    padding: 0.4rem;
-    margin: 0.2rem;
-  }
+.btnDiv {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+
+.btnDiv.budget-btns {
+  /* border: 1px solid red; */
+  padding: 1rem 0;
+}
+
+.btnDiv button {
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+  margin: 0.2rem;
+  gap: 0.5rem;
 }
 
 .empty-expenses-msg {

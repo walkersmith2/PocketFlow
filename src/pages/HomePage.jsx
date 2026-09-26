@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { supabase } from '../supabaseClient';
@@ -12,10 +12,13 @@ import AddCategoryForm from '../components/AddCategoryForm';
 import FilterBar from '../components/FilterBar';
 import CategoriesComponent from '../components/CategoriesComponent';
 
+import EditIcon from '../assets/edit-icon.svg?react';
+import DeleteIcon from '../assets/trash-icon.svg?react';
 import PieChartIcon from '../assets/pie-chart-fill.svg?react';
 import BarChartIcon from '../assets/bar-chart-fill.svg?react';
 import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
 import CaretRightIcon from '../assets/caret-right-fill.svg?react';
+import SaveIcon from '../assets/check-lg-icon.svg?react';
 
 const CATEGORY_COLORS = [
   '#FFBE0B',
@@ -30,9 +33,6 @@ const CATEGORY_COLORS = [
   '#008a05',
 ];
 
-const monthlyBudget = 10000;
-
-
 function HomePage() {
 
   const [expenses, setExpenses] = useState([]);
@@ -40,14 +40,18 @@ function HomePage() {
   const [visibleExpenses, setVisibleExpenses] = useState([]);
   const [timePeriodFilter, setTimePeriodFilter] = useState('month');
   const [dateFilter, setDateFilter] = useState(new Date());
+  const [allMonthlyBudgets, setAllMonthlyBudgets] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState(new Set());
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
   const [isPieChartVisible, setIsPieChartVisible] = useState(false);
   const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
+  const [isBudgetEditable, setIsBudgetEditable] = useState(false);
+  const [editableBudgetText, setEditableBudgetText] = useState("");
+  
   const { session } = useAuth();
   const navigate = useNavigate();
-
+  
   const rootStyles = window.getComputedStyle(document.body);
   const chartToggleInactiveColor = rootStyles.getPropertyValue('--text').trim();
   const chartToggleActiveColor = rootStyles.getPropertyValue('--text-h').trim();
@@ -55,6 +59,7 @@ function HomePage() {
   useEffect(() => {
     getExpenses();
     getCategories();
+    getAllMonthlyBudgets();
   }, []);
 
   useEffect(() => {
@@ -64,6 +69,39 @@ function HomePage() {
   }, [categories]);
 
   useEffect(updateVisibleExpenses,[expenses, dateFilter, timePeriodFilter, categoryFilter, amountFilter, sortCondition]);
+
+  useEffect(() => {setIsBudgetEditable(false)}, [dateFilter, timePeriodFilter]);
+
+  const formattedDateFilter = useMemo(() => {
+    return `${dateFilter.getFullYear()}-${String(dateFilter.getMonth() + 1).padStart(2, '0')}-01`;
+  }, [dateFilter]);
+
+  const monthlyBudgets = useMemo(() => {
+    if(timePeriodFilter === 'month') {
+      const targetMonth = formattedDateFilter;
+      const match = allMonthlyBudgets.find((row) => {
+        return row.month === targetMonth;
+      })
+      return [match?.amount ?? 0];
+    }
+    else if(timePeriodFilter === 'year') {
+      const match = Array.from({ length: 12 }, (_, index) => {
+        const targetMonth = formattedDateFilter;
+        const match = allMonthlyBudgets.find((row) => {
+          return row.month === targetMonth;
+        })
+        return match?.amount ?? 0;      
+      });
+      return match ?? [];
+    }
+
+  }, [allMonthlyBudgets, dateFilter, timePeriodFilter]);
+
+  
+
+  const monthlyBudgetsTotal = useMemo(() => {
+    return monthlyBudgets.reduce((sum, budget) => sum + budget, 0);
+  }, [monthlyBudgets]);
 
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
@@ -84,6 +122,19 @@ function HomePage() {
     setCategories(data);
   }
 
+  async function getAllMonthlyBudgets() {
+  const { data, error } = await supabase
+      .from('monthly_budgets')
+      .select();
+
+    if (error) {
+      console.error(error);
+      return 0;
+    }
+
+    setAllMonthlyBudgets(data);
+  }
+
   async function addExpense(id, amount, date, description, categoryId) {
     const row = id == -1 ? {amount: amount, date: date, description: description, categoryId: categoryId} :
     {id: id, amount: amount, date: date, description: description, categoryId: categoryId};
@@ -93,6 +144,7 @@ function HomePage() {
       console.error(error);
       return;
     }
+
     getExpenses();
   }
 
@@ -100,6 +152,44 @@ function HomePage() {
     const response = await supabase.from('expenses').delete().eq('id',expenseId);
     
     getExpenses();
+  }
+
+  async function addBudget(month, amount) {
+    const existing = allMonthlyBudgets.find(row => row.month === month);
+
+    const row = {...(existing?.id && { id: existing.id }), month: month, amount: amount};
+
+    const { data, error } = await supabase.from('monthly_budgets').upsert(row);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    getAllMonthlyBudgets();
+  }
+
+  async function deleteBudget() {
+    const response = await supabase.from('monthly_budgets').delete().eq('month', formattedDateFilter);
+    
+    getAllMonthlyBudgets();
+  }
+
+  function handleEditBudgetClick() {
+    if(isBudgetEditable) {
+      setIsBudgetEditable(false);
+      addBudget(formattedDateFilter, editableBudgetText);
+    }
+    else {
+      console.log("edit budget");
+      setIsBudgetEditable(true);
+      setEditableBudgetText(monthlyBudgets[0]);
+    }
+  }
+
+  function handleDeleteBudgetClick() {
+    console.log("delete budget");
+    deleteBudget();
   }
 
 
@@ -152,7 +242,6 @@ function HomePage() {
       return expenses.sort((a,b) => b.amount - a.amount);
     }
   }
-
 
   function updateVisibleExpenses() {
     let filteredExpenses = [...expenses];
@@ -239,13 +328,34 @@ function HomePage() {
             </div>
           </div>
           <div className="amount-total-container">
-            <p>Total Spent: <span className={`expense-total-span ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudget ? 'under-budget' : 'over-budget'}`}>${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> of <span className="budget-span">${monthlyBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></p>
+            <p>
+              Total Spent: <span 
+                  className={`expense-total-span ${monthlyBudgetsTotal == 0 || visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget'}`}
+                >
+                ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span> of <span 
+                  className="budget-span"
+                >
+                  ${isBudgetEditable ? (
+                    <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" value={editableBudgetText} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
+                  ) : (<>
+                    {monthlyBudgetsTotal !== null &&
+                    monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </>
+                  )}
+              </span>
+            </p>
+            {timePeriodFilter === 'month' &&
+            <div className="btnDiv budget-btns">
+              <button onClick={handleEditBudgetClick}>{isBudgetEditable ? <><SaveIcon /> Save Changes</> : (monthlyBudgetsTotal !== 0 ? <><EditIcon /> Edit Budget</> : <><EditIcon />Set Budget</>)}</button> <button onClick={handleDeleteBudgetClick}><DeleteIcon/> Delete Budget</button>
+            </div>
+            }
           </div>
           <div className="chart-container">
-            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories}/> : 
-            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter}/>}
+            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} /> : 
+            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} />}
           </div>
-          <p>Chart View</p>
+          <p>Chart View:</p>
           <label className="chart-view-toggle">
             <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
             <div className="toggle-icons-container"><BarChartIcon className="bar-chart-icon" style={isPieChartVisible ? {fill: chartToggleInactiveColor} : {fill: chartToggleActiveColor} }/><PieChartIcon className="pie-chart-icon" style={isPieChartVisible ? {fill: chartToggleActiveColor} : {fill: chartToggleInactiveColor} }/></div>

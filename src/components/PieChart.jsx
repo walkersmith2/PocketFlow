@@ -3,9 +3,9 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const COLOR_ALPHA = "33";
+const COLOR_ALPHA = "88";
 
-function PieChart({ expenses, categories }) {
+function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
   const CATEGORY_ORDER = [];
   const COLOR_MAP = {};
   const BORDER_COLOR_MAP = {};
@@ -29,15 +29,18 @@ function PieChart({ expenses, categories }) {
       cat => categories.find(category => category.id === cat)?.category ?? 'Unknown'
     );
 
+
+    const budgetRemaining = monthlyBudgetsTotal - expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
     const data = {
-      labels: labelsArr,
+      labels: [...labelsArr, 'Remaining Budget'],
       datasets: [
         {
           label: 'Total Amount',
-          data: numArr,
-          backgroundColor: categoriesArr.map(cat => COLOR_MAP[cat]),
-          borderColor: categoriesArr.map(cat => BORDER_COLOR_MAP[cat]),
-          borderWidth: 1,
+          data: [...numArr, budgetRemaining > 0 ? budgetRemaining : 0],
+          backgroundColor: [...categoriesArr.map(cat => COLOR_MAP[cat]), 'rgba(150,150,150, .3)'],
+          borderColor: [...categoriesArr.map(cat => BORDER_COLOR_MAP[cat]), 'rgba(150,150,150, 0)'],
+          borderWidth: 2,
         },
       ],
     };
@@ -46,7 +49,7 @@ function PieChart({ expenses, categories }) {
 
   const options = {
     responsive: true,
-    animation: false,
+    animation: true,
   };
 
   return (

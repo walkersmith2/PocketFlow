@@ -8,12 +8,10 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, setIsAddC
     const [isEditable, setIsEditable] = useState(false);
 
     function handleEdit() {
-        console.log("editing");
         setIsEditable(true);
     }
     
     function handleDelete() {
-        console.log("deleted");
         deleteExpense(expense.id);
     }
 

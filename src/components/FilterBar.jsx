@@ -38,7 +38,6 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
   const [activeDropdown, setActiveDropdown] = useState('');
   const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.id));
   const resetActive = timePeriodFilter !== 'month' || amountFilter !== 1000000 || !isAllChecked;
-  console.log(resetActive);
   const categoriesBody = [
     {
       value: 'all',
