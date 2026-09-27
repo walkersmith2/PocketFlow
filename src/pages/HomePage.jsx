@@ -86,7 +86,7 @@ function HomePage() {
     }
     else if(timePeriodFilter === 'year') {
       const match = Array.from({ length: 12 }, (_, index) => {
-        const targetMonth = formattedDateFilter;
+        const targetMonth = `${dateFilter.getFullYear()}-${String(index + 1).padStart(2, '0')}-01`;
         const match = allMonthlyBudgets.find((row) => {
           return row.month === targetMonth;
         })
@@ -325,6 +325,7 @@ function HomePage() {
             <div className='date-button-div'>
               <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()) : new Date(prev.getFullYear() - 1, prev.getMonth(), prev.getDate()))}><CaretLeftIcon /></button>
               <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() + 1, prev.getDate()) : new Date(prev.getFullYear() + 1, prev.getMonth(), prev.getDate()))}><CaretRightIcon /></button>
+              <button type='button' onClick={() => {setDateFilter(new Date())}}>View Current {timePeriodFilter === 'month' ? 'Month' : 'Year'}</button>
             </div>
           </div>
           <div className="amount-total-container">

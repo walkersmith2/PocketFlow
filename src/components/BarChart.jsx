@@ -1,3 +1,4 @@
+import { backgroundColor } from '@mui/system';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,13 +23,20 @@ ChartJS.register(
 
 const rootStyles = window.getComputedStyle(document.body);
 const accentColor = rootStyles.getPropertyValue('--accent').trim();
-const budgetOpacityHex = '40'; 
+const budgetOpacityHex = 'FF'; 
+
+const underBudgetColor = accentColor;
+const overBudgetColor = '#d73951';
+const budgetColor = '#808080';
+
+const nearBudgetThreshold = 0.1;
 
 export const options = {
   responsive: true,
   animation: true,
   plugins: {
     legend: {
+      display: false,
       position: 'top',
     },
   },
@@ -77,7 +85,6 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
           return {
             id: categoryId,
             label: categories.find(category => category.id === categoryId).category,
-            isBudget: false,
             data: [],
             borderColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
             backgroundColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
@@ -87,24 +94,22 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
       else {
         datasets.push(
           {
-            id: -1,
+            id: 'total-year',
             label: 'Total',
             data: [],
-            isBudget: false,
-            borderColor: COLOR_MAP[-1],
-            backgroundColor: COLOR_MAP[-1],
-            grouped: true,
+            borderColor: Array.from({ length: 12 }, (_, index) => underBudgetColor),
+            backgroundColor: Array.from({ length: 12 }, (_, index) => underBudgetColor),
+            grouped: false,
             barPercentage: 0.7,
           }
         );
         datasets.push(
           {
-            id: -1,
+            id: 'budget-year',
             label: 'Budget',
-            isBudget: true,
             data: [],
-            borderColor: COLOR_MAP[-1] + budgetOpacityHex,
-            backgroundColor: COLOR_MAP[-1] + budgetOpacityHex,
+            borderColor: budgetColor + budgetOpacityHex,
+            backgroundColor: budgetColor + budgetOpacityHex,
             order: 2,
             grouped: false,
             barPercentage: 0.9,
@@ -113,28 +118,27 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
       }
     }
     else if(timePeriodFilter === 'month') {
-      datasets = activeCategories.map((categoryId) => {
-        return {
-          id: categoryId,
-          label: categories.find(category => category.id === categoryId).category,
-          isBudget: false,
-          data: [],
-          borderColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
-          backgroundColor: COLOR_MAP[categoryId] + '66' || 'rgb(150, 150, 150)',
-          borderWidth: 2,
-          barPercentage: 0.9,
-        }
-      });
       datasets.push(
         {
-          id: -1,
+          id: 'total-month',
           label: 'Total',
-          isBudget: false,
           data: [],
-          borderColor: COLOR_MAP[-1],
-          backgroundColor: COLOR_MAP[-1] + '66',
+          borderColor: [...activeCategories.map((categoryId) => COLOR_MAP[categoryId] || 'rgb(150, 150, 150)'), underBudgetColor],
+          backgroundColor: [...activeCategories.map((categoryId) => COLOR_MAP[categoryId] + '66' || 'rgb(150, 150, 150)'), underBudgetColor],
           borderWidth: 2,
-          grouped: true,
+          grouped: false,
+          barPercentage: 0.7,
+        }
+      );
+      datasets.push(
+        {
+          id: 'budget-month',
+          label: 'Budget',
+          data: [],
+          borderColor: [...activeCategories.map((categoryId) => COLOR_MAP[categoryId] + budgetOpacityHex || 'rgb(150, 150, 150)'), budgetColor + budgetOpacityHex],
+          backgroundColor: [...activeCategories.map((categoryId) => COLOR_MAP[categoryId] + budgetOpacityHex || 'rgb(150, 150, 150)'), budgetColor + budgetOpacityHex],
+          borderWidth: 2,
+          grouped: false,
           barPercentage: 0.9,
         }
       );
@@ -145,7 +149,7 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
     if(timePeriodFilter === 'month') {
       const year = new Date(dateFilter).getFullYear();
       const month = new Date(dateFilter).getMonth();
-      labels = [''];
+      labels = [...activeCategories.map((categoryId) => categories.find(category => category.id === categoryId).category), 'Total'];
       const currentMonthExpenses = expenses.filter((expense) => {
         const expenseDate = new Date(expense.date + "T00:00:00");
         const currentExpenseMonth = expenseDate.getMonth();
@@ -155,13 +159,23 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
       });
       const expensesTotal = currentMonthExpenses.reduce((total, expense) => total + expense.amount, 0);
       
+
+      const totalDataset = datasets.find((dataset) => dataset.id === 'total-month');
+      const budgetDataset = datasets.find((dataset) => dataset.id === 'budget-month');
       activeCategories.forEach((categoryId) => {
         const catTotal = currentMonthExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
-        datasets.find((dataset) => dataset.id === categoryId).data = [catTotal];
-        datasets.find((dataset) => dataset.id === -1).data = [expensesTotal];
+        totalDataset.data.push(catTotal);
+        budgetDataset.data.push(0);
       })
+      datasets.find((dataset) => dataset.id === 'total-month').data.push(expensesTotal);
+      datasets.find((dataset) => dataset.id === 'budget-month').data.push(monthlyBudgets[0]);
+      if(monthlyBudgets[0] > 0 && expensesTotal > monthlyBudgets[0]) {
+        totalDataset.backgroundColor[totalDataset.backgroundColor.length - 1] = overBudgetColor;
+        totalDataset.borderColor[totalDataset.borderColor.length - 1] = overBudgetColor;
+      }
     }
     else if(timePeriodFilter === 'year') {
+      console.log("monthlyBudgets: ", monthlyBudgets);
       const year = new Date(dateFilter).getFullYear();
       labels = Array.from({ length: 12 }, (_, index) => {
         const date = new Date(year, index, 1);
@@ -183,9 +197,19 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
           })
         }
         else {
-          datasets.find((dataset) => dataset.id === -1 && dataset.isBudget === false).data[index] = expensesTotal;
-          datasets.find((dataset) => dataset.id === -1 && dataset.isBudget === true).data[index] = monthlyBudgets[index];
+          const totalDataset = datasets.find((dataset) => dataset.id === 'total-year');
+          const budgetDataset = datasets.find((dataset) => dataset.id === 'budget-year');
+          
+          totalDataset.data[index] = expensesTotal;
+          budgetDataset.data[index] = monthlyBudgets[index];
+          
+          if(monthlyBudgets[index] > 0 && expensesTotal > monthlyBudgets[index]) {
+            totalDataset.backgroundColor[index] = overBudgetColor;
+            totalDataset.borderColor[index] = overBudgetColor;
+          }
         }
+        
+      
       });
     }
 
@@ -206,7 +230,7 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
       }
       
       {expenses.length > 0 ? 
-      <Bar data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
+      <Bar key={`${timePeriodFilter}-${areCategoryLinesVisible}`} data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
     </>
   );
 }
