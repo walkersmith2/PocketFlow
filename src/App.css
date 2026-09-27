@@ -401,15 +401,24 @@ footer {
 
 .amount-total-container {
   padding: 1rem;
-  font-size: 2rem;
-  color: var(--text-h);
-  font-weight: 600;
+  
+  h2 {
+    font-size: 2rem;
+    color: var(--text-h);
+    font-weight: 600;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: var(--text-h);
+    font-weight: 400;
+  }
 
-  .expense-total-span.under-budget {
+  .expense-total-span.under-budget, .budget-remaining-span.under-budget {
     color: var(--accent);
   }
 
-  .expense-total-span.over-budget {
+  .expense-total-span.over-budget, .budget-remaining-span.over-budget {
     color: red;
   }
 }

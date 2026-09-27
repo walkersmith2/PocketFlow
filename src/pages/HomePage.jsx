@@ -97,11 +97,13 @@ function HomePage() {
 
   }, [allMonthlyBudgets, dateFilter, timePeriodFilter]);
 
-  
-
   const monthlyBudgetsTotal = useMemo(() => {
     return monthlyBudgets.reduce((sum, budget) => sum + budget, 0);
   }, [monthlyBudgets]);
+
+  const budgetRemaining = useMemo(() => {
+    return monthlyBudgetsTotal - visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+  }, [visibleExpenses, monthlyBudgetsTotal]);
 
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
@@ -329,14 +331,14 @@ function HomePage() {
             </div>
           </div>
           <div className="amount-total-container">
-            <p>
+            <h2>
               Total Spent: <span 
-                  className={`expense-total-span ${monthlyBudgetsTotal > 0 ? (visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget') : ''}`}
+                  className={`expense-total-span ${timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 ? (visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget') : ''}`}
                 >
                 ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span> 
               
-              {monthlyBudgetsTotal > 0 && (
+              {timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 && (
                 <> of <span className="budget-span">
                     ${isBudgetEditable ? (
                       <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" defaultValue={Number(editableBudgetText).toFixed(2)} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
@@ -348,6 +350,15 @@ function HomePage() {
                   </span>
                 </>
                 )}
+            </h2>
+            <p>
+              {timePeriodFilter === 'month' ? (monthlyBudgetsTotal > 0 ? budgetRemaining > 0 ? (
+                <>You have <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >
+                  ${budgetRemaining.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span> left in your budget.</>) : (
+                  <>You are <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >${Math.abs(budgetRemaining).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span> over budget.</>
+              ) : 'Budget not set for this month.') : ''} 
             </p>
             {timePeriodFilter === 'month' &&
             <div className="btnDiv budget-btns">
