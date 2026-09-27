@@ -109,9 +109,9 @@ footer {
   align-items: center;
 
   .chart-container {
-    /* position: relative; */
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 400px;
     padding: 1rem;
     margin: 1rem 0;
     display: flex;
