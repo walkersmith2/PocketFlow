@@ -416,7 +416,7 @@ footer {
 
 .edit-budget-input {
   font-size: 2rem;
-  width: 5rem;
+  width: 10rem;
 }
 
 .add-category-form {
@@ -554,7 +554,6 @@ footer {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  /* border: 1px solid red; */
   align-items: start;
   width: fit-content;
 }
@@ -598,7 +597,6 @@ footer {
 }
 
 .btnDiv.budget-btns {
-  /* border: 1px solid red; */
   padding: 1rem 0;
 }
 

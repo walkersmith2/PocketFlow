@@ -38,8 +38,8 @@ function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
         {
           label: 'Total Amount',
           data: [...numArr, budgetRemaining > 0 ? budgetRemaining : 0],
-          backgroundColor: [...categoriesArr.map(cat => COLOR_MAP[cat]), 'rgba(150,150,150, .3)'],
-          borderColor: [...categoriesArr.map(cat => BORDER_COLOR_MAP[cat]), 'rgba(150,150,150, 0)'],
+          backgroundColor: [...categoriesArr.map(cat => COLOR_MAP[cat]), '#808080'],
+          borderColor: [...categoriesArr.map(cat => BORDER_COLOR_MAP[cat]), '#808080'],
           borderWidth: 2,
         },
       ],

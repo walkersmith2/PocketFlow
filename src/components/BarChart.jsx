@@ -23,7 +23,7 @@ ChartJS.register(
 
 const rootStyles = window.getComputedStyle(document.body);
 const accentColor = rootStyles.getPropertyValue('--accent').trim();
-const budgetOpacityHex = 'FF'; 
+const budgetOpacityHex = '88'; 
 
 const underBudgetColor = accentColor;
 const overBudgetColor = '#d73951';
@@ -175,7 +175,6 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
       }
     }
     else if(timePeriodFilter === 'year') {
-      console.log("monthlyBudgets: ", monthlyBudgets);
       const year = new Date(dateFilter).getFullYear();
       labels = Array.from({ length: 12 }, (_, index) => {
         const date = new Date(year, index, 1);

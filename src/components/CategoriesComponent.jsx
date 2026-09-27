@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import EditCategoryColor from '../components/EditCategoryColor';
 
@@ -13,6 +13,21 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
   const [editableCategoryColor, setEditableCategoryColor] = useState("");
   const [nonEmptyCategories, setNonEmptyCategories] = useState();
   const [isActive, setIsActive] = useState(false);
+
+  const containerRef = useRef(null);
+      
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsActive(false); // Minimize or close
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, []);
 
   useEffect(() => {
     setCategoryFilter(prev => {
@@ -91,7 +106,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
   }
 
   return (
-    <div className={`categories-component-container ${isActive ? 'active' : ''}`}>
+    <div ref={containerRef} className={`categories-component-container ${isActive ? 'active' : ''}`}>
       <button className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>{isActive ? 'Hide' : 'View'} Categories</span><CaretLeftIcon className="caret-left-icon"/></button>
       <div className="categories-component">
         <h2>Categories</h2>

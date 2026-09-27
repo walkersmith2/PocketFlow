@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Dropdown from './Dropdown';
 
 import FilterIcon from '../assets/funnel-fill.svg?react';
@@ -37,7 +37,7 @@ const amountBody = [
 function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, categoryFilter, setCategoryFilter, amountFilter, setAmountFilter }) {
   const [activeDropdown, setActiveDropdown] = useState('');
   const isAllChecked = categories.length > 0 && categories.every(category => categoryFilter.has(category.id));
-  const resetActive = timePeriodFilter !== 'month' || amountFilter !== 1000000 || !isAllChecked;
+  const resetActive = amountFilter !== 1000000 || !isAllChecked;
   const categoriesBody = [
     {
       value: 'all',
@@ -49,6 +49,21 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
     }))
   ];
   
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setActiveDropdown(''); // Minimize or close
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   function handletimePeriodFilterChange(e) {
     setTimePeriodFilter(e.target.value);
@@ -90,9 +105,9 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
   }
 
   return (
-    <div className="filter-bar">
+    <div className="filter-bar" ref={containerRef}>
       <FilterIcon className="filter-icon"/> Filter By:
-      <Dropdown name='date' header={`Time Period: ${timePeriodFilter}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
+      <Dropdown name='date' header={`Time Period: ${timePeriodFilter === 'month' ? 'Month' : 'Year'}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
       <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
       <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>
       <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}>Reset Filters <XIcon /></button>

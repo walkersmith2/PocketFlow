@@ -331,20 +331,23 @@ function HomePage() {
           <div className="amount-total-container">
             <p>
               Total Spent: <span 
-                  className={`expense-total-span ${monthlyBudgetsTotal == 0 || visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget'}`}
+                  className={`expense-total-span ${monthlyBudgetsTotal > 0 ? (visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget') : ''}`}
                 >
                 ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span> of <span 
-                  className="budget-span"
-                >
-                  ${isBudgetEditable ? (
-                    <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" value={editableBudgetText} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
-                  ) : (<>
-                    {monthlyBudgetsTotal !== null &&
-                    monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </>
-                  )}
-              </span>
+              </span> 
+              
+              {monthlyBudgetsTotal > 0 && (
+                <> of <span className="budget-span">
+                    ${isBudgetEditable ? (
+                      <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" defaultValue={Number(editableBudgetText).toFixed(2)} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
+                    ) : (<>
+                      {monthlyBudgetsTotal !== null &&
+                      monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </>
+                    )}
+                  </span>
+                </>
+                )}
             </p>
             {timePeriodFilter === 'month' &&
             <div className="btnDiv budget-btns">

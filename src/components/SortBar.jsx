@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Dropdown from './Dropdown';
 
@@ -21,6 +21,21 @@ function SortBar({ sortCondition, setSortCondition }) {
   const [direction, setDirection] = useState('ascending');
   const [activeDropdown, setActiveDropdown] = useState('');
 
+  const containerRef = useRef(null);
+  
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setActiveDropdown(''); // Minimize or close
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   function handleConditionChange(e) {
     setCondition(e.target.value);
     setSortCondition(`${e.target.value}-${direction}`);
@@ -38,7 +53,7 @@ function SortBar({ sortCondition, setSortCondition }) {
   }
 
   return (
-    <div className="sort-bar">
+    <div className="sort-bar" ref={containerRef}>
       <Dropdown name='sort' header={`Sort By: ${condition}`} type='radio' body={sortBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={condition} handleFilterChange={handleConditionChange}/>
       <label className="sort-direction-toggle">
         <input type="checkbox" checked={direction === "descending"} onChange={handleDirectionChange}/>
