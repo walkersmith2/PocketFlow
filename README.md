@@ -6,5 +6,3 @@ This is a full stack application that lets users log and track their expenses. F
 ## Planned features to add
 - budget:
     - add per category budget (portion of overall budget for that month)
-- add Line chart
-    - show budget and running total of expenses

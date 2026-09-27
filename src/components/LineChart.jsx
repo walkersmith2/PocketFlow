@@ -6,6 +6,7 @@ import {
   LineElement,
   Tooltip,
 } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
@@ -16,11 +17,38 @@ ChartJS.register(
   PointElement,
   LineElement,
   Tooltip,
+  annotationPlugin,
 );
 
-export const options = {
+const rootStyles = window.getComputedStyle(document.body);
+const lineColor = rootStyles.getPropertyValue('--text').trim();
+const accentColor = rootStyles.getPropertyValue('--accent').trim();
+
+function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyBudgets, monthlyBudgetsTotal }) {
+
+  const options = {
+    maintainAspectRatio: false,
     responsive: true,
     animation: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        display: true,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          display: false,
+        },
+      },
+    },  
     elements: {
     point: {
       radius: 0,       // Hides the dots in normal state
@@ -29,29 +57,39 @@ export const options = {
   }
 };
 
-function LineChart({ expenses, categories, dateFilter }) {
-
-  const [areCategoryLinesVisible, setAreCategoryLinesVisible] = useState(true);
-  
-  function handleChartToggleChange(e) {
-    if(areCategoryLinesVisible) {
-      setAreCategoryLinesVisible(false);
-    }
-    else {
-      setAreCategoryLinesVisible(true);
-    }
-  }
+  const [areCategoryLinesVisible, setAreCategoryLinesVisible] = useState(false);
 
   function getDataObject() {
     if(expenses.length === 0) {
       return {labels: [], datasets: []};
     }
 
+    if(timePeriodFilter === 'month' && monthlyBudgetsTotal > 0) {
+      options.plugins['annotation'] = {
+        annotations: {
+            BudgetLine: {
+              type: 'line',
+              yMin: 70, // The starting Y-value for the horizontal line
+              yMax: 70, // The ending Y-value (keep it the same for horizontal)
+              borderColor: accentColor,
+              borderWidth: 1,
+              borderDash: [3, 6], // Optional: makes the line dashed
+              label: {
+                display: true,
+                content: 'Budget',
+                position: 'end',
+                backgroundColor: accentColor,
+              },
+            },
+        },
+      };
+    }
+
     const COLOR_MAP = {};
     categories.forEach((category) => {
       COLOR_MAP[category.id] = category.color;
     });
-    COLOR_MAP[-1] = 'rgb(255, 255, 255)';
+    COLOR_MAP[-1] = lineColor;
 
     let labels = [];
     const activeCategoriesSet = new Set();
@@ -67,6 +105,7 @@ function LineChart({ expenses, categories, dateFilter }) {
           data: [],
           borderColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
           backgroundColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
+          borderWidth: 1,
         };
       });
     }
@@ -78,12 +117,14 @@ function LineChart({ expenses, categories, dateFilter }) {
         data: [],
         borderColor: COLOR_MAP[-1],
         backgroundColor: COLOR_MAP[-1],
+        borderWidth: 1,
       }
     );
-    
-    if(dateFilter === "month") {
+
+    if(timePeriodFilter === "month") {
       const daysInCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
       labels = Array.from({ length: daysInCurrentMonth }, (_, index) => index + 1);
+      let runningTotal = 0;
       labels.forEach((day, index) => {
         const currentDayExpenses = expenses.filter((expense) => {
           const expenseDate = new Date(expense.date + "T00:00:00");
@@ -91,18 +132,14 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayOfMonth === day;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        if(areCategoryLinesVisible) {
-          activeCategories.forEach((categoryId) => {
-            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
-            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
-          })
-        }
-        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
+        runningTotal += expensesTotal;
+        datasets.find((dataset) => dataset.id === -1).data[index] = runningTotal;
       });
     }
-    if(dateFilter === "year") {
+    if(timePeriodFilter === "year") {
       const year = new Date().getFullYear();
       const daysInCurrentYear = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
+      let runningTotal = 0;
       labels = Array.from({ length: daysInCurrentYear }, (_, index) => {
         const date = new Date(year, 0, index + 1);
         return date.toLocaleDateString('en-us', { month: 'short', day: 'numeric' });
@@ -114,13 +151,8 @@ function LineChart({ expenses, categories, dateFilter }) {
           return dayOfYear === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
-        if(areCategoryLinesVisible) {
-          activeCategories.forEach((categoryId) => {
-            const catTotal = currentDayExpenses.filter((expense) => expense.categoryId === categoryId).reduce((total, expense) => total + expense.amount, 0);
-            datasets.find((dataset) => dataset.id === categoryId).data[index] = catTotal;
-          })
-        }
-        datasets.find((dataset) => dataset.id === -1).data[index] = expensesTotal;
+        runningTotal += expensesTotal;
+        datasets.find((dataset) => dataset.id === -1).data[index] = runningTotal;
       });
     }
 

@@ -48,6 +48,7 @@ function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
   }
 
   const options = {
+    maintainAspectRatio: false,
     responsive: true,
     animation: true,
   };

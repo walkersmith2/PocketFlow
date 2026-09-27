@@ -32,6 +32,7 @@ const budgetColor = '#808080';
 const nearBudgetThreshold = 0.1;
 
 export const options = {
+  maintainAspectRatio: false,
   responsive: true,
   animation: true,
   plugins: {

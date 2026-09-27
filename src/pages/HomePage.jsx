@@ -7,6 +7,7 @@ import ExpenseCard from '../components/ExpenseCard';
 import AddExpenseComponent from '../components/AddExpenseComponent';
 import PieChart from '../components/PieChart';
 import BarChart from '../components/BarChart';
+import LineChart from '../components/LineChart';
 import SortBar from '../components/SortBar';
 import AddCategoryForm from '../components/AddCategoryForm';
 import FilterBar from '../components/FilterBar';
@@ -16,9 +17,11 @@ import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
 import PieChartIcon from '../assets/pie-chart-fill.svg?react';
 import BarChartIcon from '../assets/bar-chart-fill.svg?react';
+import LineChartIcon from '../assets/graph-up-arrow.svg?react';
 import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
 import CaretRightIcon from '../assets/caret-right-fill.svg?react';
 import SaveIcon from '../assets/check-lg-icon.svg?react';
+// import { TrendingUp } from 'lucide-react';
 
 const CATEGORY_COLORS = [
   '#FFBE0B',
@@ -47,8 +50,9 @@ function HomePage() {
   const [isPieChartVisible, setIsPieChartVisible] = useState(false);
   const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
   const [isBudgetEditable, setIsBudgetEditable] = useState(false);
-  const [editableBudgetText, setEditableBudgetText] = useState("");
-  
+  const [editableBudgetText, setEditableBudgetText] = useState('');
+  const [activeChartView, setActiveChartView] = useState('line');
+
   const { session } = useAuth();
   const navigate = useNavigate();
   
@@ -367,14 +371,24 @@ function HomePage() {
             }
           </div>
           <div className="chart-container">
-            {isPieChartVisible ? <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} /> : 
-            <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} />}
+            {activeChartView ==='pie' && <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
+            {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} />}
+            {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
           </div>
-          <p>Chart View:</p>
-          <label className="chart-view-toggle">
-            <input type="checkbox" checked={isPieChartVisible} onChange={handleChartToggleChange}></input>
-            <div className="toggle-icons-container"><BarChartIcon className="bar-chart-icon" style={isPieChartVisible ? {fill: chartToggleInactiveColor} : {fill: chartToggleActiveColor} }/><PieChartIcon className="pie-chart-icon" style={isPieChartVisible ? {fill: chartToggleActiveColor} : {fill: chartToggleInactiveColor} }/></div>
-          </label>
+          <h4>Chart View: {activeChartView.charAt(0).toUpperCase() + activeChartView.slice(1)}</h4>
+          <div className="chart-view-toggle">
+            <div className="toggle-icons-container">
+              <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
+                <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
+              </label>
+              <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
+                <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
+              </label>
+              <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
+                <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
+              </label>
+            </div>
+          </div>
         </div>
       </main>
       {/* <footer>
