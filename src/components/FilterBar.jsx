@@ -106,11 +106,14 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
 
   return (
     <div className="filter-bar" ref={containerRef}>
-      <FilterIcon className="filter-icon"/> Filter By:
-      <Dropdown name='date' header={`Time Period: ${timePeriodFilter === 'month' ? 'Month' : 'Year'}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
-      <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
-      <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>
-      <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}>Reset Filters <XIcon /></button>
+      {/* <FilterIcon className="filter-icon"/>  */}
+      <h3>Filter By:</h3>
+      <div className='dropdowns-container'>
+        <Dropdown name='date' header={`${timePeriodFilter === 'month' ? 'Month' : 'Year'}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
+        <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
+        <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>
+        <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}>Reset Filters <XIcon /></button>
+      </div>
     </div>
   )
 }

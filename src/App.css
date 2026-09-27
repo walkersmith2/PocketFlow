@@ -55,7 +55,7 @@ header {
 
 .homepage-main {
   width: 95%;
-  max-width: 1200px;
+  max-width: 1400px;
   height: fit-content;
   margin: auto;
   padding: 0;
@@ -102,7 +102,6 @@ footer {
   min-width: 100%;
   margin: 0 1rem;
   padding: 1rem;
-  padding-bottom: 4rem;
   border: 1px solid var(--text);
   border-radius: 1rem;
   display: flex;
@@ -120,6 +119,15 @@ footer {
     align-items: center;
   }
 
+  .chart-view-toggle-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+  }
+  
   .chart-view-toggle {
     border: 1px solid var(--text);
     border-radius: 2rem;
@@ -129,7 +137,7 @@ footer {
     justify-content: space-evenly;
     width: fit-content;
     padding: 0.5rem;
-    margin-bottom: 1rem;
+    margin: 0;
     
     .toggle-icons-container {
       display: flex;
@@ -420,7 +428,11 @@ footer {
 }
 
 .amount-total-container {
-  padding: 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
   
   h2 {
     font-size: 2rem;
@@ -718,26 +730,48 @@ footer {
   overflow: hidden;
 } 
 
-.filter-bar, .sort-bar {
-  margin: 1rem;
+.filter-bar {
+  border: 1px solid var(--text);
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.2rem 0;
+  padding: 1rem;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.sort-bar {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 0.2rem 0;
   gap: 0.3rem;
+  width: 100%;
+}
+
+.dropdowns-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+
+.dropdown .dropdown-header, .dropdowns-container button {
+  font-size: 1rem;
+  margin: 0;
+  padding: 0.5rem;
   width: fit-content;
   height: fit-content;
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
 
-  .dropdown .dropdown-header, button {
-    font-size: 1rem;
-    margin: 0;
-    padding: 0.5rem;
-    width: fit-content;
-    height: fit-content;
-    border-radius: 0.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
+.dropdown .dropdown-header {
+  margin: 0.2rem;
 }
 
 .sort-direction-toggle {
@@ -777,6 +811,12 @@ footer {
 
 .filter-bar {
   color: var(--text-h);
+  padding-top: 0.5rem;
+
+  h3 {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .filter-icon {

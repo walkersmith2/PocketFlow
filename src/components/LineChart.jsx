@@ -105,7 +105,7 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
           data: [],
           borderColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
           backgroundColor: COLOR_MAP[categoryId] || 'rgb(150, 150, 150)',
-          borderWidth: 1,
+          borderWidth: 2,
         };
       });
     }
@@ -117,7 +117,7 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
         data: [],
         borderColor: COLOR_MAP[-1],
         backgroundColor: COLOR_MAP[-1],
-        borderWidth: 1,
+        borderWidth: 2,
       }
     );
 

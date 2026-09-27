@@ -308,6 +308,7 @@ function HomePage() {
       <main className="homepage-main">
         <div className="expense-cards-container">
           <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
+          <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
           <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
           <ul className="expenses-ul">
             {
@@ -320,10 +321,10 @@ function HomePage() {
               <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters above the chart.</div></li>
             }
           </ul>
-          <p>Showing {visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
+          <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
         <div className="chart-view-container">
-          <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
+          {/* <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  /> */}
           <div className="date-container">
             <span className="date-display">
               {timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}
@@ -375,20 +376,19 @@ function HomePage() {
             {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} />}
             {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
           </div>
-          <h4>Chart View: {activeChartView.charAt(0).toUpperCase() + activeChartView.slice(1)}</h4>
           <div className="chart-view-toggle">
-            <div className="toggle-icons-container">
-              <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
-                <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
-              </label>
-              <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
-                <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
-              </label>
-              <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
-                <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
-              </label>
+              <div className="toggle-icons-container">
+                <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
+                  <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
+                </label>
+                <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
+                  <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
+                </label>
+                <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
+                  <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
+                </label>
+              </div>
             </div>
-          </div>
         </div>
       </main>
       {/* <footer>
