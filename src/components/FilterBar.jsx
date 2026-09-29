@@ -107,7 +107,7 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
   return (
     <div className="filter-bar" ref={containerRef}>
       {/* <FilterIcon className="filter-icon"/>  */}
-      <h3>Filter By:</h3>
+      <h3><FilterIcon />Filter By:</h3>
       <div className='dropdowns-container'>
         <Dropdown name='date' header={`${timePeriodFilter === 'month' ? 'Month' : 'Year'}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
         <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />

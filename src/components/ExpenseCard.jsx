@@ -25,7 +25,7 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, setIsAddC
                     <h2>${expense.amount.toFixed(2)}</h2>
                     <div className={styles.subtitleDiv}>
                         <p className={styles.descriptionContainer}>{expense.description}</p>
-                        <p className={styles.categoryContainer}><div className={styles.categoryColorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></div>{categories.find(category => category.id === expense.categoryId).category}</p>
+                        <p className={styles.categoryContainer}><span className={styles.categoryColorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></span>{categories.find(category => category.id === expense.categoryId).category}</p>
                     </div>
                 </div>
                 <div className={styles.rightColumn}>

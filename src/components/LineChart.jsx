@@ -29,7 +29,7 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
   const options = {
     maintainAspectRatio: false,
     responsive: true,
-    animation: false,
+    animation: true,
     plugins: {
       legend: {
         position: 'top',
