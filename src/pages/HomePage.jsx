@@ -324,7 +324,6 @@ function HomePage() {
           <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
         <div className="chart-view-container">
-          {/* <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  /> */}
           <div className="date-container">
             <span className="date-display">
               {timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}
@@ -343,7 +342,7 @@ function HomePage() {
                 ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span> 
               
-              {timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 && (
+              {/* {timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 && ( */}
                 <> of <span className="budget-span">
                     ${isBudgetEditable ? (
                       <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" defaultValue={Number(editableBudgetText).toFixed(2)} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
@@ -354,15 +353,15 @@ function HomePage() {
                     )}
                   </span>
                 </>
-                )}
+                {/* )} */}
             </h2>
             <p>
               {timePeriodFilter === 'month' ? (monthlyBudgetsTotal > 0 ? budgetRemaining > 0 ? (
                 <>You have <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >
                   ${budgetRemaining.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span> left in your budget.</>) : (
+                </span> left in your budget for this month.</>) : (
                   <>You are <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >${Math.abs(budgetRemaining).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span> over budget.</>
+                </span> over budget for this month.</>
               ) : 'Budget not set for this month.') : ''} 
             </p>
             {timePeriodFilter === 'month' &&

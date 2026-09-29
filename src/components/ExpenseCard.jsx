@@ -19,23 +19,25 @@ function ExpenseCard({ expense, addExpense, deleteExpense, categories, setIsAddC
         <>
         {isEditable ? 
         <AddExpenseForm setIsVisible={setIsEditable} isVisible={isEditable} addExpense={addExpense} expense={expense} categories={categories} isEditExpenseForm={true} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible}/> :
-        <div className={styles.expenseCardContainer}>
-            <div className={styles.colorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></div>
+        // <div className={styles.expenseCardContainer}>
             <div className={styles.expenseCard}>
                 <div className={styles.textDiv}>
-                    <h2 >${expense.amount.toFixed(2)}</h2>
+                    <h2>${expense.amount.toFixed(2)}</h2>
                     <div className={styles.subtitleDiv}>
-                        <p>{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                        <p>{expense.description}</p>
-                        <p>{categories.find(category => category.id === expense.categoryId).category}</p>
+                        <p className={styles.descriptionContainer}>{expense.description}</p>
+                        <p className={styles.categoryContainer}><div className={styles.categoryColorLabel} style={{backgroundColor: categories.find(category => category.id === expense.categoryId).color}}></div>{categories.find(category => category.id === expense.categoryId).category}</p>
                     </div>
                 </div>
-                <div className={styles.btnDiv}>
-                    <button onClick={handleEdit}><EditIcon /></button>
-                    <button className={styles.deleteBtn} onClick={handleDelete}><DeleteIcon /></button>
+                <div className={styles.rightColumn}>
+                    <p className={styles.dateContainer}>{new Date(expense.date + 'T00:00:00').toLocaleDateString('en-us', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    <div className={styles.btnDiv}>
+                        <button onClick={handleEdit}><EditIcon /></button>
+                        <button className={styles.deleteBtn} onClick={handleDelete}><DeleteIcon /></button>
+                    </div>
                 </div>
             </div>
-        </div>}
+        // </div>
+        }
         
         </>
     )

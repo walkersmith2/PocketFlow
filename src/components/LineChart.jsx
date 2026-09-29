@@ -69,10 +69,10 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
         annotations: {
             BudgetLine: {
               type: 'line',
-              yMin: 70, // The starting Y-value for the horizontal line
-              yMax: 70, // The ending Y-value (keep it the same for horizontal)
+              yMin: monthlyBudgets[0], // The starting Y-value for the horizontal line
+              yMax: monthlyBudgets[0], // The ending Y-value (keep it the same for horizontal)
               borderColor: accentColor,
-              borderWidth: 1,
+              borderWidth: 3,
               borderDash: [3, 6], // Optional: makes the line dashed
               label: {
                 display: true,

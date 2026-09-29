@@ -2,10 +2,10 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    margin: 1rem 0;
+    
     border-radius: 0.5rem;
     /* flex-grow: 1; */
-    border: 1px solid var(--text); 
+     
 }
 
 .colorLabel {
@@ -16,21 +16,26 @@
 }
 
 .expenseCard {
-    background-color: rgba(255,255,225, 0.1);
+    background-color: var(--social-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
     display: flex;
     text-align: center;
-    justify-content:space-between;
-    border-radius: 0 0.5rem 0.5rem 0;
-    padding: 0.5rem;
+    justify-content: space-between;
+    padding: 1rem;
+    margin: 1rem 0;
     flex-grow: 1;
 
     .textDiv {
         display: flex;
         flex-direction: column;
         align-items: start;
-        padding: 0.5rem;
-        width: 8rem;
-        overflow: scroll;
+        /* padding: 0.5rem; */
+        padding: 0;
+        margin: 0;
+        width: 10rem;
+        /* border: 1px solid red; */
+        /* overflow: scroll; */
     }
 
     .subtitleDiv {
@@ -39,11 +44,52 @@
         text-align: left;
     }
 
-    .subtitleDiv p {
+    /* .subtitleDiv p {
         padding: 0.1rem;
-        /* white-space: nowrap;
-        overflow-x: scroll; */
+    } */
+
+    .rightColumn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        /* border: 1px solid red; */
     }
+    
+
+
+    .descriptionContainer {
+        font-size: 1rem;
+        font-weight: 600;
+    }   
+
+    /* .dateContainer {
+        border: 1px solid red;
+    } */
+
+    .categoryContainer {
+        background-color: var(--bg);
+        border: 1px solid var(--text);
+        border-radius: 1rem;
+        width: fit-content;
+        padding: 0.2rem 0.5rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.8rem;
+
+        .categoryColorLabel {
+            border: 1px solid var(--text);
+            border-radius: 50%;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+    }
+
 
     .btnDiv {
         width: fit-content;
@@ -57,7 +103,7 @@
 
     .btnDiv button {
         border-radius: 0.5rem;
-        padding: 0.8rem;
+        padding: 0.5rem;
         margin: 0.2rem;
     }
 }

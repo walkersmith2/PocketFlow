@@ -113,8 +113,10 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
         <div className="categories-list">
           {categories.sort((a,b) => a.id - b.id).map((category) => (
             <div key={category.id} className="category-div">
+              <div className="category-color-text-div">
                 {editableCategory === category.id ? <EditCategoryColor CATEGORY_COLORS={CATEGORY_COLORS} editableCategoryColor={editableCategoryColor} setEditableCategoryColor={setEditableCategoryColor}/> : <div className="color-label" style={{backgroundColor: category.color}}></div>}
                 <div className="category-text-div">{ editableCategory === category.id ? <input type="text" value={editableCategoryText} onChange={handleEditableCategoryTextChange}/> : category.category }</div>
+              </div>
               <div className="btnDiv">
                 {editableCategory === category.id ? <button onClick={handleSaveCategoryClick} value={category.id}><SaveIcon /></button> :
                 <button value={category.id} onClick={handleEditCategoryClick} ><EditIcon /></button>}

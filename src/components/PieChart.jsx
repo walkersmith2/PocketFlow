@@ -56,7 +56,7 @@ function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
   return (
     <>
       {expenses.length > 0 ? 
-      <Pie data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
+      <Pie key={`${monthlyBudgetsTotal}`} data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
     </>
   );
 }

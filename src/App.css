@@ -62,7 +62,6 @@ header {
   align-self: center;
   display: grid;
   grid-template-columns: min-content auto;
-  /* border: 1px solid yellow; */
 }
 
 footer {
@@ -102,7 +101,8 @@ footer {
   min-width: 100%;
   margin: 0 1rem;
   padding: 1rem;
-  border: 1px solid var(--text);
+  border: 1px solid var(--border);
+  background-color: var(--social-bg);
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
@@ -129,7 +129,7 @@ footer {
   }
   
   .chart-view-toggle {
-    border: 1px solid var(--text);
+    border: 1px solid var(--border);
     border-radius: 2rem;
     display: flex;
     flex-direction: row;
@@ -144,31 +144,30 @@ footer {
       align-items: center;
       
       label {
-        fill: var(--text);
-        background-color: var(--bg);
+        color: var(--text-h);
         width: 2rem;
         aspect-ratio: 1 / 1;
+        border: 1px solid transparent;
         border-radius: 1rem;
         padding: 0;
         margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: fill 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
       }
 
+      label:hover { 
+        border-color: var(--hover);
+        background-color: var(--hover);
+      }
       label.active {
-        fill: var(--bg);
-        color: var(--bg);
-        background-color: var(--text-h);
+        border-color: var(--text-h);
       }
 
       .line-chart-toggle {
-        stroke: var(--text);
+        stroke: var(--text-h);
         stroke-width: 1.5;
-      }
-      .line-chart-toggle.active {
-        stroke: var(--bg);
       }
 
       /* .line-chart-icon, .bar-chart-icon, .pie-chart-icon {
@@ -204,12 +203,11 @@ footer {
 }
 
 .add-expense-btn {
-  width: 100%;
+  /* width: 100%; */
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1rem;
 }
 
 .add-expense-form-minimized {
@@ -219,12 +217,17 @@ footer {
 .add-expense-form-container {
   position: absolute;
   width: 300px;
-  background-color: var(--bg);
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: 1rem;
   height: 0;
   overflow: hidden;
-  transition: height 0.3s ease;
+  /* transition: height 0.3s ease; */
+  margin-top: 0.5rem;
+}
+
+.add-expense-form-container.active {
+  background-color: var(--bg);
 }
 
 .add-expense-form-container.active.edit-expense {
@@ -295,7 +298,7 @@ footer {
   margin: 0;
   width: 100%;
   border-radius: 1rem;
-  border: 1px solid var(--text);
+  border: 1px solid var(--border);
   flex-grow: 1;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -353,44 +356,7 @@ footer {
   }
 }
 
-.filter-form {
-  max-width: 100%;
-  min-width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: start;
-  justify-self: center;
-
-  fieldset {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    border: 1px solid var(--text);
-    border-radius: 1rem;
-    padding: 1rem;
-    margin: 0 0.5rem;
-    height: 200px;
-    
-    overflow: hidden;
-    /* position: absolute;
-    height: 0;
-    /* transition: height 0.3s ease; */
-  }
-
-  .category-fieldset {
-    .show-add-category-component-btn {
-      margin-top: auto;
-    }
-
-  }
-}
-
 .date-container {
-  /* border: 1px solid var(--text);
-  border-radius:  1rem; */
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -401,10 +367,9 @@ footer {
   color: var(--text-h);
   font-weight: 600;
   justify-content: space-between;
+  /* border: 1px solid red; */
   
   .date-display {
-    border: 1px solid var(--text);
-    border-radius: 1rem;
     width: 12rem;
     padding: 1rem 0.7rem;
     white-space: nowrap;
@@ -581,10 +546,10 @@ footer {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  border-left: 1px solid  var(--text);
+  border-left: 1px solid var(--border);
   gap: 0.5rem;
   padding: 1rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
 }
 
 .categories.list {
@@ -605,13 +570,27 @@ footer {
   justify-content: space-between;
   align-items: center;
 
+  .category-color-text-div {
+    background-color: var(--bg);
+    border: 1px solid var(--text);
+    border-radius: 1rem;
+    width: fit-content;
+    padding: 0.2rem 0.5rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+
+  }
+
   .color-label {
     min-width: 1rem;
     height: 1rem;
-    margin-right: 1rem;
     padding: 0;
     border: 1px solid var(--text);
-    border-radius: 0.3rem;
+    border-radius: 50%;
   }
 
   
@@ -669,7 +648,7 @@ footer {
 
 .categories-list {
   overflow-y: sc/roll;
-  border: 1px solid var(--text);
+  border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
 }
@@ -691,9 +670,9 @@ footer {
     color: var(--text);
     background-color: transparent;
     border: 1px solid transparent;
-    border-radius: 0.3rem;
+    border-radius: 0.7rem;
     width: 200px;
-    margin-top: 0.3rem;
+    margin-top: 0.1rem;
     padding: 0;
     z-index: 0;
     display: grid;
@@ -730,16 +709,25 @@ footer {
   overflow: hidden;
 } 
 
-.filter-bar {
-  border: 1px solid var(--text);
+.dropdown-body-inner label {
+  color: var(--text-h);
   border-radius: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 0.2rem 0;
-  padding: 1rem;
-  gap: 0.3rem;
-  width: 100%;
+  padding: 0.2rem 0.5rem;
+}
+
+.dropdown-body-inner label:hover {
+  background-color: var(--hover);
+  border-radius: 1rem;
+}
+
+.dropdown-body-inner input[type='radio'], .dropdown-body-inner input[type='checkbox'] {
+  appearance: none;
+}
+
+.dropdown-body-inner label:has(input:checked) {
+  color: var(--bg);
+  background-color: var(--text);
 }
 
 .sort-bar {
@@ -752,6 +740,9 @@ footer {
 }
 
 .dropdowns-container {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -760,7 +751,7 @@ footer {
 
 .dropdown .dropdown-header, .dropdowns-container button {
   font-size: 1rem;
-  margin: 0;
+  margin: 0.2rem;
   padding: 0.5rem;
   width: fit-content;
   height: fit-content;
@@ -811,9 +802,18 @@ footer {
 
 .filter-bar {
   color: var(--text-h);
-  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  /* border: 1px solid red; */
+  /* padding: 1rem; */
+  gap: 0.3rem;
+  width: 100%;
 
   h3 {
+    font-size: 1rem;
+    font-weight: 500;
     margin: 0;
     padding: 0;
   }
