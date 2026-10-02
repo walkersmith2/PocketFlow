@@ -22,9 +22,10 @@ ChartJS.register(
 
 const rootStyles = window.getComputedStyle(document.body);
 const lineColor = rootStyles.getPropertyValue('--text').trim();
-const accentColor = rootStyles.getPropertyValue('--accent').trim();
+const underBudgetColor = rootStyles.getPropertyValue('--under-budget').trim();
+const overBudgetColor = rootStyles.getPropertyValue('--over-budget').trim();
 
-function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyBudgets, monthlyBudgetsTotal }) {
+function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyBudgets, monthlyBudgetsTotal, budgetRemaining }) {
 
   const options = {
     maintainAspectRatio: false,
@@ -60,9 +61,6 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
   const [areCategoryLinesVisible, setAreCategoryLinesVisible] = useState(false);
 
   function getDataObject() {
-    if(expenses.length === 0) {
-      return {labels: [], datasets: []};
-    }
 
     if(timePeriodFilter === 'month' && monthlyBudgetsTotal > 0) {
       options.plugins['annotation'] = {
@@ -71,14 +69,14 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
               type: 'line',
               yMin: monthlyBudgets[0], // The starting Y-value for the horizontal line
               yMax: monthlyBudgets[0], // The ending Y-value (keep it the same for horizontal)
-              borderColor: accentColor,
+              borderColor: budgetRemaining >= 0 ? underBudgetColor : overBudgetColor,
               borderWidth: 3,
               borderDash: [3, 6], // Optional: makes the line dashed
               label: {
                 display: true,
                 content: 'Budget',
                 position: 'end',
-                backgroundColor: accentColor,
+                backgroundColor: budgetRemaining >= 0 ? underBudgetColor : overBudgetColor,
               },
             },
         },
@@ -164,10 +162,7 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
     return dataObject;
   }
   return (
-    <>
-      {expenses.length > 0 ? 
-      <Line data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
-    </>
+    <Line data={getDataObject()} options={options} />
   );
 }
 

@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function AddCategoryForm({ addCategory, isAddCategoryFormVisible, setIsAddCategoryFormVisible, CATEGORY_COLORS }) {
   const [category, setCategory] = useState("");
-  const [color, setColor] = useState("red");
+  const [color, setColor] = useState('#3A86FF');
+
+
+  useEffect(() => {
+    setColor(CATEGORY_COLORS[0]);
+  }, [CATEGORY_COLORS]);
 
   function handleSubmit() {
     addCategory(-1, category, color);

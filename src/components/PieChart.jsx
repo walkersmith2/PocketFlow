@@ -4,6 +4,7 @@ import { Pie } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const COLOR_ALPHA = "88";
+const budgetColor = '#969696';
 
 function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
   const CATEGORY_ORDER = [];
@@ -38,8 +39,8 @@ function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
         {
           label: 'Total Amount',
           data: [...numArr, budgetRemaining > 0 ? budgetRemaining : 0],
-          backgroundColor: [...categoriesArr.map(cat => COLOR_MAP[cat]), '#808080'],
-          borderColor: [...categoriesArr.map(cat => BORDER_COLOR_MAP[cat]), '#808080'],
+          backgroundColor: [...categoriesArr.map(cat => COLOR_MAP[cat]),budgetColor + COLOR_ALPHA],
+          borderColor: [...categoriesArr.map(cat => BORDER_COLOR_MAP[cat]), budgetColor],
           borderWidth: 2,
         },
       ],
@@ -50,14 +51,15 @@ function PieChart({ expenses, categories, monthlyBudgetsTotal }) {
   const options = {
     maintainAspectRatio: false,
     responsive: true,
-    animation: true,
+    animation: {
+      animateRotate: true,
+      animateScale: false,
+      duration: 800,
+    },
   };
 
   return (
-    <>
-      {expenses.length > 0 ? 
-      <Pie key={`${monthlyBudgetsTotal}`} data={getDataObject()} options={options} /> : <p>Nothing to show.</p>}
-    </>
+    <Pie key={`${monthlyBudgetsTotal}`} data={getDataObject()} options={options} />
   );
 }
 

@@ -12,6 +12,8 @@ import SortBar from '../components/SortBar';
 import AddCategoryForm from '../components/AddCategoryForm';
 import FilterBar from '../components/FilterBar';
 import CategoriesComponent from '../components/CategoriesComponent';
+import BudgetComponent from '../components/BudgetComponent';
+import AddBudgetComponent from '../components/AddBudgetComponent';
 
 import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
@@ -21,19 +23,20 @@ import LineChartIcon from '../assets/graph-up-arrow.svg?react';
 import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
 import CaretRightIcon from '../assets/caret-right-fill.svg?react';
 import SaveIcon from '../assets/check-lg-icon.svg?react';
-// import { TrendingUp } from 'lucide-react';
 
 const CATEGORY_COLORS = [
   '#FFBE0B',
   '#FB5607',
   '#FF006E',
-  '#d90b15',
+  '#733e41',
   '#ab7eeb',
   '#6e07f5',
+  '#7cd1e8',
   '#3A86FF',
   '#4557f8',
   '#b6ff18',
-  '#008a05',
+  '#e3e1a1',
+  '#a04d24',
 ];
 
 function HomePage() {
@@ -44,6 +47,7 @@ function HomePage() {
   const [timePeriodFilter, setTimePeriodFilter] = useState('month');
   const [dateFilter, setDateFilter] = useState(new Date());
   const [allMonthlyBudgets, setAllMonthlyBudgets] = useState([]);
+  const [allCategoryBudgets, setAllCategoryBudgets] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState(new Set());
   const [amountFilter, setAmountFilter] = useState(1000000);
   const [sortCondition, setSortCondition] = useState('date-ascending'); // options: date, amount
@@ -52,6 +56,7 @@ function HomePage() {
   const [isBudgetEditable, setIsBudgetEditable] = useState(false);
   const [editableBudgetText, setEditableBudgetText] = useState('');
   const [activeChartView, setActiveChartView] = useState('line');
+  const [isAddBudgetComponentOpen, setIsAddBudgetComponentOpen] = useState(false);
 
   const { session } = useAuth();
   const navigate = useNavigate();
@@ -64,6 +69,7 @@ function HomePage() {
     getExpenses();
     getCategories();
     getAllMonthlyBudgets();
+    getAllCategoryBudgets();
   }, []);
 
   useEffect(() => {
@@ -109,6 +115,27 @@ function HomePage() {
     return monthlyBudgetsTotal - visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0);
   }, [visibleExpenses, monthlyBudgetsTotal]);
 
+  const categoryBudgets = useMemo(() => {
+    if(timePeriodFilter === 'month') {
+      const targetMonth = formattedDateFilter;
+      const matches = allCategoryBudgets.filter((row) => {
+        return row.month === targetMonth;
+      })
+      return matches ?? [];
+    }
+    else if(timePeriodFilter === 'year') {
+      const matches = Array.from({ length: 12 }, (_, index) => {
+        const targetMonth = `${dateFilter.getFullYear()}-${String(index + 1).padStart(2, '0')}-01`;
+        const matches = allCategoryBudgets.filter((row) => {
+          return row.month === targetMonth;
+        })
+        return matches ?? [];
+      });
+      return matches ?? [];
+    }
+
+  }, [allCategoryBudgets, dateFilter, timePeriodFilter]);
+
   async function getExpenses() {
     const { data, error } = await supabase.from('expenses').select();
     if (error) {
@@ -141,6 +168,19 @@ function HomePage() {
     setAllMonthlyBudgets(data);
   }
 
+  async function getAllCategoryBudgets() {
+  const { data, error } = await supabase
+      .from('category_budgets')
+      .select();
+
+    if (error) {
+      console.error(error);
+      return 0;
+    }
+
+    setAllCategoryBudgets(data);
+  }
+
   async function addExpense(id, amount, date, description, categoryId) {
     const row = id == -1 ? {amount: amount, date: date, description: description, categoryId: categoryId} :
     {id: id, amount: amount, date: date, description: description, categoryId: categoryId};
@@ -161,11 +201,14 @@ function HomePage() {
   }
 
   async function addBudget(month, amount) {
-    const existing = allMonthlyBudgets.find(row => row.month === month);
+    const monthKey = typeof month === 'string' ? month : formattedDateFilter;
 
-    const row = {...(existing?.id && { id: existing.id }), month: month, amount: amount};
-
-    const { data, error } = await supabase.from('monthly_budgets').upsert(row);
+    const { data, error } = await supabase
+      .from('monthly_budgets')
+      .upsert(
+      { month: monthKey, amount: Number(amount) || 0 },
+      { onConflict: 'user_id,month' }
+    );
 
     if (error) {
       console.error(error);
@@ -181,23 +224,44 @@ function HomePage() {
     getAllMonthlyBudgets();
   }
 
+
+
+  async function addCategoryBudgets(month, percentages) {
+    const monthKey = typeof month === 'string' ? month : formattedDateFilter;
+
+    const rows = Object.entries(percentages).map(([categoryId, amount]) => ({
+      categoryId: Number(categoryId),
+      month: monthKey,
+      amount: Number(amount) || 0,
+    }));
+
+    const { error } = await supabase
+      .from('category_budgets')
+      .upsert(rows, { onConflict: 'user_id,categoryId,month' });
+
+    if (error) {
+      console.error(error);
+      return false;
+    }
+
+    await getAllCategoryBudgets();
+    return true;
+  }
+
   function handleEditBudgetClick() {
     if(isBudgetEditable) {
       setIsBudgetEditable(false);
       addBudget(formattedDateFilter, editableBudgetText);
     }
     else {
-      console.log("edit budget");
       setIsBudgetEditable(true);
       setEditableBudgetText(monthlyBudgets[0]);
     }
   }
 
   function handleDeleteBudgetClick() {
-    console.log("delete budget");
     deleteBudget();
   }
-
 
   async function addCategory(id, category, color) {
     if(categories.includes((row) => row.category === category)) {
@@ -288,6 +352,13 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
+      {isAddBudgetComponentOpen && (
+        <div className='modal-backdrop' onClick={() => setIsAddBudgetComponentOpen(false)}>
+          <div className='modal' onClick={(e) => e.stopPropagation()}>
+            <AddBudgetComponent categories={categories} monthlyBudgets={monthlyBudgets} addBudget={addBudget} categoryBudgets={categoryBudgets} addCategoryBudgets={addCategoryBudgets} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} setIsAddBudgetComponentOpen={setIsAddBudgetComponentOpen} onClose={() => setIsAddBudgetComponentOpen(false)} />
+          </div>
+        </div>
+      )}
       <CategoriesComponent expenses={expenses} categories={categories} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} CATEGORY_COLORS={CATEGORY_COLORS}/>
       <AddCategoryForm CATEGORY_COLORS={CATEGORY_COLORS} addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
       <header>
@@ -324,70 +395,25 @@ function HomePage() {
           <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
         <div className="chart-view-container">
-          <div className="date-container">
-            <span className="date-display">
-              {timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}
-            </span>
-            <div className='date-button-div'>
-              <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()) : new Date(prev.getFullYear() - 1, prev.getMonth(), prev.getDate()))}><CaretLeftIcon /></button>
-              <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() + 1, prev.getDate()) : new Date(prev.getFullYear() + 1, prev.getMonth(), prev.getDate()))}><CaretRightIcon /></button>
-              <button type='button' onClick={() => {setDateFilter(new Date())}}>View Current {timePeriodFilter === 'month' ? 'Month' : 'Year'}</button>
-            </div>
-          </div>
-          <div className="amount-total-container">
-            <h2>
-              Total Spent: <span 
-                  className={`expense-total-span ${timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 ? (visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0) <= monthlyBudgetsTotal ? 'under-budget' : 'over-budget') : ''}`}
-                >
-                ${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span> 
-              
-              {/* {timePeriodFilter === 'month' && monthlyBudgetsTotal > 0 && ( */}
-                <> of <span className="budget-span">
-                    ${isBudgetEditable ? (
-                      <input type="number" min="0.01" max="999999.99" step="0.01" required className="edit-budget-input" defaultValue={Number(editableBudgetText).toFixed(2)} onChange={(e) => setEditableBudgetText(e.target.value)} /> 
-                    ) : (<>
-                      {monthlyBudgetsTotal !== null &&
-                      monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </>
-                    )}
-                  </span>
-                </>
-                {/* )} */}
-            </h2>
-            <p>
-              {timePeriodFilter === 'month' ? (monthlyBudgetsTotal > 0 ? budgetRemaining > 0 ? (
-                <>You have <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >
-                  ${budgetRemaining.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span> left in your budget for this month.</>) : (
-                  <>You are <span className={`budget-remaining-span ${monthlyBudgetsTotal > 0 ? (budgetRemaining > 0 ? 'under-budget' : 'over-budget') : ''}`} >${Math.abs(budgetRemaining).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span> over budget for this month.</>
-              ) : 'Budget not set for this month.') : ''} 
-            </p>
-            {timePeriodFilter === 'month' &&
-            <div className="btnDiv budget-btns">
-              <button onClick={handleEditBudgetClick}>{isBudgetEditable ? <><SaveIcon /> Save Changes</> : (monthlyBudgetsTotal !== 0 ? <><EditIcon /> Edit Budget</> : <><EditIcon />Set Budget</>)}</button> <button onClick={handleDeleteBudgetClick}><DeleteIcon/> Delete Budget</button>
-            </div>
-            }
-          </div>
+          <BudgetComponent visibleExpenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} dateFilter={dateFilter} setDateFilter={setDateFilter} onEditBudget={() => setIsAddBudgetComponentOpen(true)} />
           <div className="chart-container">
             {activeChartView ==='pie' && <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
-            {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} />}
-            {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
+            {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} />}
+            {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} />}
           </div>
           <div className="chart-view-toggle">
-              <div className="toggle-icons-container">
-                <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
-                  <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
-                </label>
-                <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
-                  <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
-                </label>
-                <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
-                  <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
-                </label>
-              </div>
+            <div className="toggle-icons-container">
+              <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
+                <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
+              </label>
+              <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
+                <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
+              </label>
+              <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
+                <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
+              </label>
             </div>
+          </div>
         </div>
       </main>
       {/* <footer>

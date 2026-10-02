@@ -112,7 +112,7 @@ function FilterBar({ categories, timePeriodFilter, setTimePeriodFilter, category
         <Dropdown name='date' header={`${timePeriodFilter === 'month' ? 'Month' : 'Year'}`} type='radio' body={dateBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={timePeriodFilter} handleFilterChange={handletimePeriodFilterChange} />
         <Dropdown name='amount' header={amountFilter === 1000000 ? 'Amount' : `Under $${amountFilter}`} type='radio' body={amountBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={amountFilter} handleFilterChange={handleAmountFilterChange} />
         <Dropdown name='category' header={isAllChecked ? 'Category' : (categoryFilter.size == 1 ? `${categoryFilter.size} Category Selected` : `${categoryFilter.size} Categories Selected`)} type='checkbox' body={categoriesBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={categoryFilter} handleFilterChange={handleCategoryFilterChange} isAllChecked={isAllChecked} handleAllOptionChange={handleAllOptionChange}/>
-        <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}>Reset Filters <XIcon /></button>
+        <button type='button' className={`reset-filters-btn ${resetActive ? 'active' : ''}`} disabled={!resetActive} onClick={handleReset}><XIcon /> Reset Filters</button>
       </div>
     </div>
   )
