@@ -122,7 +122,7 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
             backgroundColor: Array.from({ length: 12 }, (_, index) => underBudgetColor + barBackgroundOpacity),
             borderWidth: 1,
             grouped: false,
-            barPercentage: 0.9,
+            barPercentage: 0.7,
           }
         );
         datasets.push(
@@ -150,7 +150,7 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
           backgroundColor: [...categories.map((category) => COLOR_MAP[category.id] + barBackgroundOpacity || budgetColor + barBackgroundOpacity), underBudgetColor + barBackgroundOpacity],
           borderWidth: 1,
           grouped: false,
-          barPercentage: 0.9,
+          barPercentage: 0.7,
         }
       );
       datasets.push(
