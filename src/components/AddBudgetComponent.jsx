@@ -109,7 +109,7 @@ function AddBudgetComponent({ categories, monthlyBudgets, addBudget, categoryBud
         </div>
       </div>
       <div className='budget-total-table'>
-        <h3>Budget</h3>
+        <h3>1. Set Total Monthly Budget</h3>
         <table>
           <thead>
             <tr>
@@ -131,7 +131,7 @@ function AddBudgetComponent({ categories, monthlyBudgets, addBudget, categoryBud
       </div>
       <div className='budget-breakdown-table'>
         <div className='table-heading'>
-          <h3>Breakdown</h3>
+          <h3>2. Set Per Category Budgets</h3>
           <button onClick={handleClearAll} disabled={allotedPercentage === 0} ><ClearIcon /> Clear All</button>
         </div>
         <div className='scrollable-table'>

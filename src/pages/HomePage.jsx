@@ -14,6 +14,7 @@ import FilterBar from '../components/FilterBar';
 import CategoriesComponent from '../components/CategoriesComponent';
 import BudgetComponent from '../components/BudgetComponent';
 import AddBudgetComponent from '../components/AddBudgetComponent';
+import ExpensesComponent from '../components/ExpensesComponent'
 
 import EditIcon from '../assets/edit-icon.svg?react';
 import DeleteIcon from '../assets/trash-icon.svg?react';
@@ -23,6 +24,8 @@ import LineChartIcon from '../assets/graph-up-arrow.svg?react';
 import CaretLeftIcon from '../assets/caret-left-fill.svg?react';
 import CaretRightIcon from '../assets/caret-right-fill.svg?react';
 import SaveIcon from '../assets/check-lg-icon.svg?react';
+import WalletIcon from '../assets/wallet.svg?react';
+import ProfileIcon from '../assets/person-circle.svg?react';
 
 const CATEGORY_COLORS = [
   '#FFBE0B',
@@ -361,27 +364,26 @@ function HomePage() {
       )}
       <CategoriesComponent expenses={expenses} categories={categories} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} addCategory={addCategory} deleteCategory={deleteCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} CATEGORY_COLORS={CATEGORY_COLORS}/>
       <AddCategoryForm CATEGORY_COLORS={CATEGORY_COLORS} addCategory={addCategory} isAddCategoryFormVisible={isAddCategoryFormVisible} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
-      <header>
-        <div className="logo-div">
-          <h1>Pocket<span>Flow</span>.</h1>
-          <h2>Expense tracking, simplified.</h2>
-          <hr></hr>
+      <header className='homepage-header'>
+        <div className='logo-div' >
+          <h2 className='logo-title' >Pocket<span>Flow</span><WalletIcon  className='wallet-icon' /></h2>
+          <h3 className='logo-subtitle' >Expense tracking, simplified.</h3>
         </div>
-        <ul id="header-buttons-ul">
-          <li>
-            <p>Logged in as <b>{session.user.email || 'guest'}</b></p>
-          </li>
-          <li>
-            <button className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
-          </li>
-        </ul>
+        <div className='header-buttons-div'>          
+          <span className='profile-span'>
+            <ProfileIcon />
+            <p>{session.user.email || 'guest'}</p>
+          </span>
+          <button className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
+        </div>
       </header>
-      <main className="homepage-main">
-        <div className="expense-cards-container">
+      <main className='homepage-main'>
+        <div className='expense-cards-container'>
+          <h2>Expenses</h2>
           <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
-          <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  />
+          {/* <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  /> */}
           <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
-          <ul className="expenses-ul">
+          {/* <ul className="expenses-ul">
             {
               visibleExpenses.length > 0 ?
               visibleExpenses.map((expense, index) => (
@@ -391,25 +393,26 @@ function HomePage() {
               )) :
               <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters above the chart.</div></li>
             }
-          </ul>
+          </ul> */}
+          <ExpensesComponent visibleExpenses={visibleExpenses} categories={categories} />
           <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
-        <div className="chart-view-container">
+        <div className='chart-view-container'>
           <BudgetComponent visibleExpenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} dateFilter={dateFilter} setDateFilter={setDateFilter} onEditBudget={() => setIsAddBudgetComponentOpen(true)} />
-          <div className="chart-container">
+          <div className='chart-container'>
             {activeChartView ==='pie' && <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
             {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} />}
             {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} />}
           </div>
           <div className="chart-view-toggle">
             <div className="toggle-icons-container">
-              <label className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
+              <label title='Click to view line chart' className={`line-chart-toggle ${activeChartView === 'line' ? 'active' : ''}`}>
                 <input type='radio' value='line' checked={activeChartView === 'line'} onChange={(e) => setActiveChartView('line')}/><LineChartIcon className='line-chart-icon' />
               </label>
-              <label className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
+              <label title='Click to view bar chart' className={`bar-chart-toggle ${activeChartView === 'bar' ? 'active' : ''}`}>
                 <input type='radio' value='bar' checked={activeChartView === 'bar'} onChange={(e) => setActiveChartView('bar')} /><BarChartIcon className='bar-chart-icon' />
               </label>
-              <label className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
+              <label title='Click to view pie chart' className={`pie-chart-toggle ${activeChartView === 'pie' ? 'active' : ''}`}>
                 <input type='radio' value='pie' checked={activeChartView === 'pie'} onChange={(e) => setActiveChartView('pie')} /><PieChartIcon className='pie-chart-icon' />
               </label>
             </div>

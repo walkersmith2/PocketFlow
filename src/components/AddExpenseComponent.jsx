@@ -26,7 +26,7 @@ function AddExpenseComponent({ addExpense, categories, addCategory, setIsAddCate
 
     return (
         <div ref={containerRef} className={`add-expense-component ${isFormVisible ? 'active' : ''}`}>
-            <button className="add-expense-btn" onClick={handleBtnClick}>New Expense <CaretDownIcon className="caret-down-icon" width="0.7rem" /></button>
+            <button title='Create a new expense' className="add-expense-btn" onClick={handleBtnClick}>New Expense <CaretDownIcon className="caret-down-icon" width="0.7rem" /></button>
             <AddExpenseForm setIsVisible={setIsFormVisible} isVisible={isFormVisible} addExpense={addExpense} categories={categories} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} isEditExpenseForm={false} />
         </div>
     );

@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient'
-import { Turnstile } from '@marsidev/react-turnstile'
+import { supabase } from '../supabaseClient';
+import { Turnstile } from '@marsidev/react-turnstile';
+
+import WalletIcon from '../assets/wallet.svg?react';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -46,13 +48,10 @@ function LoginPage() {
   }
 
   return (
-    <div className="login-container">
-      <div className="logo-container">
-        <div className="logo-div">
-            <h1>Pocket<span>Flow</span>.</h1>
-            <h2>Expense tracking, simplified.</h2>
-            <hr></hr>
-        </div>
+    <div className='login-container'>
+      <div className='logo-div large'>
+        <h2 className='logo-title' >Pocket<span>Flow</span><WalletIcon  className='wallet-icon' /></h2>
+        <h3 className='logo-subtitle' >Expense tracking, simplified.</h3>
       </div>
       <form className="login-form" onSubmit={handleLogin}>
         <div className="login-form-header">
@@ -81,8 +80,8 @@ function LoginPage() {
         Forgot Password? <Link to="/reset-password">Reset Password</Link>
       </p>
       <p>
-        Don't have an account? <Link to="/signup">Sign Up</Link>
-        <button className="try-anonymous-btn" onClick={handleClick}>Try it out</button>
+        Don't have an account? <Link to="/signup">Sign Up</Link> or
+        <button className="try-anonymous-btn" onClick={handleClick}>Try without an account</button>
       </p>
       </form>
       

@@ -6,6 +6,7 @@ import CaretRightIcon from '../assets/caret-right-fill.svg?react';
 import EditIcon from '../assets/edit-icon.svg?react';
 import ResetIcon from '../assets/arrow-clockwise.svg?react';
 import CalendarIcon from '../assets/calendar-range.svg?react';
+import InfoIcon from '../assets/info-lg.svg?react';
 
 const rootStyles = window.getComputedStyle(document.body);
 const underBudgetColor = rootStyles.getPropertyValue('--under-budget').trim();
@@ -57,7 +58,7 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
         <div className='component-heading-div'>
           <h2 className='component-heading'>Total Spent: <span className={`total-spent-span ${budgetRemaining >= 0 ? 'under-budget-text' : 'over-budget-text'}`}>${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> of ${monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
           <p className='total-spent-subheading'>{timePeriodFilter === 'month' && (<>You are <span className={budgetRemaining >= 0 ? 'under-budget-text' : 'over-budget-text'}>${Math.abs(budgetRemaining).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> {budgetRemaining >= 0 ? 'under' : 'over'} budget for this month.</>)}</p>
-          <button className='edit-budget-btn' onClick={onEditBudget}><EditIcon />Edit Budget</button>
+          <button title='Edit Budget' className='edit-budget-btn' onClick={onEditBudget}><EditIcon className='edit-icon' />Edit Budget</button>
         </div>
         <div>
           <div className='date-div'>
@@ -66,21 +67,21 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
               {isCurrentMonthOrYear() && <p className='date-subheading'>{`Days left in ${timePeriodFilter}: ${getDaysLeftInTimePeriod()}`}</p>}
             </div>
             <div className='date-button-div'>
-              <label className='time-period-filter-toggle'>
+              <label title='Change time period between month and year' className='time-period-filter-toggle'>
                 <input type='checkbox' checked={timePeriodFilter === 'year'} onChange={(e) => e.target.checked ? setTimePeriodFilter('year') : setTimePeriodFilter('month')}/>
                 <CalendarIcon className='calendar-icon'/><span className='text-span'>{timePeriodFilter === 'month' ? 'Month' : 'Year'}</span>
               </label>
               <div className='arrow-btns-div'>
-                <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()) : new Date(prev.getFullYear() - 1, prev.getMonth(), prev.getDate()))}><CaretLeftIcon /></button>
-                <button className='reset-btn' type='button' disabled={isCurrentMonthOrYear()} onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(new Date().getFullYear(), new Date().getMonth(), prev.getDate()) : new Date(new Date().getFullYear(), prev.getMonth(), prev.getDate()))}><ResetIcon className='reset-icon' /></button>
-                <button type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() + 1, prev.getDate()) : new Date(prev.getFullYear() + 1, prev.getMonth(), prev.getDate()))}><CaretRightIcon /></button>
+                <button title='Previous month/year' type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()) : new Date(prev.getFullYear() - 1, prev.getMonth(), prev.getDate()))}><CaretLeftIcon /></button>
+                <button title='Return to current month/year' className='reset-btn' type='button' disabled={isCurrentMonthOrYear()} onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(new Date().getFullYear(), new Date().getMonth(), prev.getDate()) : new Date(new Date().getFullYear(), prev.getMonth(), prev.getDate()))}><ResetIcon className='reset-icon' /></button>
+                <button title='Next month/year' type='button' onClick={() => setDateFilter(prev => timePeriodFilter === 'month' ? new Date(prev.getFullYear(), prev.getMonth() + 1, prev.getDate()) : new Date(prev.getFullYear() + 1, prev.getMonth(), prev.getDate()))}><CaretRightIcon /></button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className='budget-breakdown-table'>
-        <h3 className='heading'>Breakdown <button onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
+        <h3 className='heading'><span className='text-span'>Budget Breakdown <button className='info-button' ><InfoIcon /></button></span><button onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
         <div className='scrollable-table'>
           <table className={isBreakdownVisible ? 'expanded' : ''}>
             <thead>
@@ -104,8 +105,8 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
                 return (
                   <tr key={category.id} className={percentUsed > 100 ? 'over-budget-bg' : ''}>
                     <td><span className='category-span'><div className='category-color-label' style={{ backgroundColor: category.color }}></div>{category.category}</span></td>
-                    <td className='scrollable'>${budget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className='scrollable'>${spent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>${budget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>${spent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className={remaining >= 0 ? 'under-budget-text' : 'over-budget-text'}>
                       {`${remaining < 0 ? '-' : ''}$${Math.abs(remaining).toLocaleString('en-US', {
                         minimumFractionDigits: 2,
