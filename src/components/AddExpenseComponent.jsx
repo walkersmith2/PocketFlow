@@ -1,35 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import AddExpenseForm from './AddExpenseForm';
-import CaretDownIcon from '../assets/caret-down-fill.svg?react';
+import AddIcon from '../assets/plus-circle.svg?react';
 
 
-function AddExpenseComponent({ addExpense, categories, addCategory, setIsAddCategoryFormVisible }) {
-    const [isFormVisible, setIsFormVisible] = useState(false);
-    function handleBtnClick() {
-        setIsFormVisible(!isFormVisible);
-    }
+function AddExpenseComponent({ isAddExpenseFormOpen, setIsAddExpenseFormOpen, addExpense, categories, addCategory, setIsAddCategoryFormVisible, isEditExpenseForm, setIsEditExpenseForm, editableExpense }) {
+  function handleBtnClick() {
+    setIsAddExpenseFormOpen(true);
+  }
 
-    const containerRef = useRef(null);
-      
-    useEffect(() => {
-    function handleClickOutside(event) {
-        if (containerRef.current && !containerRef.current.contains(event.target)) {
-            setIsFormVisible(false); // Minimize or close
-        }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-    };
-    }, []);
-
-    return (
-        <div ref={containerRef} className={`add-expense-component ${isFormVisible ? 'active' : ''}`}>
-            <button title='Create a new expense' className="add-expense-btn" onClick={handleBtnClick}>New Expense <CaretDownIcon className="caret-down-icon" width="0.7rem" /></button>
-            <AddExpenseForm setIsVisible={setIsFormVisible} isVisible={isFormVisible} addExpense={addExpense} categories={categories} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} isEditExpenseForm={false} />
+  return (
+    <div className={`add-expense-component ${isAddExpenseFormOpen ? 'active' : ''}`}>
+      <button title='Create a new expense' className="add-expense-btn" onClick={handleBtnClick}><AddIcon />Add Expense</button>
+      {isAddExpenseFormOpen && (
+        <div className='modal-backdrop' onClick={() => setIsAddExpenseFormOpen(false)}>
+          <div className='modal' onClick={(e) => e.stopPropagation()}>
+            <AddExpenseForm isOpen={isAddExpenseFormOpen} setIsOpen={setIsAddExpenseFormOpen} addExpense={addExpense} expense={editableExpense} categories={categories} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} isEditExpenseForm={isEditExpenseForm} setIsEditExpenseForm={setIsEditExpenseForm} />
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 export default AddExpenseComponent;

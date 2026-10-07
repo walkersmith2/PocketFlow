@@ -55,7 +55,7 @@ function SortBar({ sortCondition, setSortCondition }) {
   return (
     <div className="sort-bar" ref={containerRef}>
       <Dropdown name='sort' header={`Sort By: ${condition.charAt(0).toUpperCase() + condition.slice(1)}`} type='radio' body={sortBody} activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} filter={condition} handleFilterChange={handleConditionChange}/>
-      <label className="sort-direction-toggle">
+      <label title='Toggle sort direction' className="sort-direction-toggle">
         <input type="checkbox" checked={direction === "descending"} onChange={handleDirectionChange}/>
         {direction === 'descending' ? <SortDownIcon className="sort-down-icon"/> : <SortDownAltIcon className="sort-down-alt-icon"/>}
       </label>

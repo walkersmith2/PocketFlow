@@ -1,8 +1,9 @@
 // Takes optional expense prop in case the form is being used to edit an existing expense
-function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categories, setIsAddCategoryFormVisible, isEditExpenseForm }) {
+function AddExpenseForm({ isOpen, setIsOpen, addExpense, expense, categories, setIsAddCategoryFormVisible, isEditExpenseForm, setIsEditExpenseForm }) {
 
   function handleCancel() {
-    setIsVisible(false);
+    setIsOpen(false);
+    setIsEditExpenseForm(false);
   }
 
   function handleSubmit(formData) {
@@ -13,7 +14,7 @@ function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categori
     const categoryId = formData.get("categoryId");
 
     addExpense(id, amount, date, description, categoryId);
-    setIsVisible(false);
+    setIsOpen(false);
   }
 
   function handleAddCategoryClick(e) {
@@ -22,7 +23,8 @@ function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categori
   }
 
   return (
-    <div className={`add-expense-form-container ${isVisible ? 'active' : ''} ${isEditExpenseForm ? 'edit-expense' : ''}`}>
+    <div className={`add-expense-form-container ${isEditExpenseForm ? 'edit-expense' : ''}`}>
+      <h2 className='component-heading'>{isEditExpenseForm ? 'Edit' : 'Add'} Expense</h2>
       <form className="add-expense-form" action={handleSubmit}>
         <input name="id" type="hidden" defaultValue={expense?.id ?? -1}></input>
         <label>
@@ -44,7 +46,7 @@ function AddExpenseForm({ setIsVisible, isVisible, addExpense, expense, categori
           <select name="categoryId" defaultValue={expense?.categoryId ?? 0} className="category-select" required>
             { categories.map((category) => (<option key={category.id} value={category.id}>{category.category}</option>)) }
           </select>
-          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>New Category</button>
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+ New Category</button>
         </label>
         <div className="add-expense-submit-btn-div">
             <button className="add-expense-submit-btn" type="submit">{expense ? 'Save' : 'Add'}</button>

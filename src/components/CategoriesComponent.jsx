@@ -107,7 +107,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
 
   return (
     <div ref={containerRef} className={`categories-component-container ${isActive ? 'active' : ''}`}>
-      <button className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>{isActive ? 'Hide' : 'View'} Categories</span><CaretLeftIcon className="caret-left-icon"/></button>
+      <button title='Show/Hide Categories Sidebar' className="expand-categories-component-btn" type="button" onClick={handleMinimize}><span>{isActive ? 'Hide' : 'View'} Categories</span><CaretLeftIcon className="caret-left-icon"/></button>
       <div className="categories-component">
         <h2>Categories</h2>
         <div className="categories-list">

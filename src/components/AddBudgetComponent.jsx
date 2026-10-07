@@ -100,34 +100,33 @@ function AddBudgetComponent({ categories, monthlyBudgets, addBudget, categoryBud
         <div className='date-div'>
           <div className='date-heading-div'>
             <h2 className='date-heading'>{timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}</h2>
-            {/* <div className='button-div'>
-              <button><CaretLeftIcon /></button>
-              <button><CaretRightIcon /></button>
-            </div> */}
           </div>
           {isCurrentMonthOrYear() && <p className='date-subheading'>{`Days left in ${timePeriodFilter}: ${getDaysLeftInTimePeriod()}`}</p>}
         </div>
       </div>
       <div className='budget-total-table'>
         <h3>1. Set Total Monthly Budget</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Total</th>
-              <th>Allotted</th>
-              <th>Remaining</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>$<DecimalInput value={totalBudget} onValueChange={(v) => setTotalBudget(v)} /></td>
-              <td className='scrollable'>${allotedAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({(allotedPercentage * 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</td>
-              <td className='scrollable'>${remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({(remainingPercentage * 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</td>
-              <td><div ref={progressBarRef} className='budget-progress-outer-bar'><div className='budget-progress-inner-bar' style={{ width: Math.floor(progressBarOuterWidth * allotedPercentage) }} ></div></div></td>
-            </tr>
-          </tbody>
-        </table>
+        <div className='scrollable-table'>
+          <table>
+            <thead>
+              <tr>
+                <th>Total</th>
+                <th>Allotted</th>
+                <th>Remaining</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>$<DecimalInput value={totalBudget} onValueChange={(v) => setTotalBudget(v)} /></td>
+                <td>${allotedAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({(allotedPercentage * 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</td>
+                <td>${remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({(remainingPercentage * 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)</td>
+                <td><div ref={progressBarRef} className='budget-progress-outer-bar'><div className='budget-progress-inner-bar' style={{ width: Math.floor(progressBarOuterWidth * allotedPercentage) }} ></div></div></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
       </div>
       <div className='budget-breakdown-table'>
         <div className='table-heading'>

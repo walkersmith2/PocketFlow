@@ -60,6 +60,9 @@ function HomePage() {
   const [editableBudgetText, setEditableBudgetText] = useState('');
   const [activeChartView, setActiveChartView] = useState('line');
   const [isAddBudgetComponentOpen, setIsAddBudgetComponentOpen] = useState(false);
+  const [isAddExpenseFormOpen, setIsAddExpenseFormOpen] = useState(false);
+  const [isEditExpenseForm, setIsEditExpenseForm] = useState(false);
+  const [editableExpense, setEditableExpense] = useState(null);
 
   const { session } = useAuth();
   const navigate = useNavigate();
@@ -227,8 +230,6 @@ function HomePage() {
     getAllMonthlyBudgets();
   }
 
-
-
   async function addCategoryBudgets(month, percentages) {
     const monthKey = typeof month === 'string' ? month : formattedDateFilter;
 
@@ -374,29 +375,10 @@ function HomePage() {
             <ProfileIcon />
             <p>{session.user.email || 'guest'}</p>
           </span>
-          <button className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
+          <button title='Log out of your account' className="logout-btn header-btn" onClick={handleLogout}>Log Out</button>
         </div>
       </header>
       <main className='homepage-main'>
-        <div className='expense-cards-container'>
-          <h2>Expenses</h2>
-          <AddExpenseComponent addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} />
-          {/* <FilterBar categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} amountFilter={amountFilter} setAmountFilter={setAmountFilter}  /> */}
-          <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
-          {/* <ul className="expenses-ul">
-            {
-              visibleExpenses.length > 0 ?
-              visibleExpenses.map((expense, index) => (
-                  <li key={expense.id}>
-                  <ExpenseCard expense={expense} addExpense={addExpense} deleteExpense={deleteExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible}/>
-                  </li>
-              )) :
-              <li><div className="empty-expenses-msg">No expenses to show. Click the <strong>New Expense</strong> button to add an expense or change the filters above the chart.</div></li>
-            }
-          </ul> */}
-          <ExpensesComponent visibleExpenses={visibleExpenses} categories={categories} />
-          <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
-        </div>
         <div className='chart-view-container'>
           <BudgetComponent visibleExpenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} dateFilter={dateFilter} setDateFilter={setDateFilter} onEditBudget={() => setIsAddBudgetComponentOpen(true)} />
           <div className='chart-container'>
@@ -417,6 +399,13 @@ function HomePage() {
               </label>
             </div>
           </div>
+        </div>
+        <div className='expenses-container'>
+          <h2>Expenses</h2>
+          <AddExpenseComponent isAddExpenseFormOpen={isAddExpenseFormOpen} setIsAddExpenseFormOpen={setIsAddExpenseFormOpen} addExpense={addExpense} categories={categories} addCategory={addCategory} setIsAddCategoryFormVisible={setIsAddCategoryFormVisible} isEditExpenseForm={isEditExpenseForm}  setIsEditExpenseForm={setIsEditExpenseForm} editableExpense={editableExpense} />
+          <SortBar sortCondition={sortCondition} setSortCondition={setSortCondition} />
+          <ExpensesComponent visibleExpenses={visibleExpenses} categories={categories} deleteExpense={deleteExpense} setIsAddExpenseFormOpen={setIsAddExpenseFormOpen} setIsEditExpenseForm={setIsEditExpenseForm} setEditableExpense={setEditableExpense} />
+          <p>{visibleExpenses.length} expense{visibleExpenses.length == 1  ? '' : 's'}</p>
         </div>
       </main>
       {/* <footer>

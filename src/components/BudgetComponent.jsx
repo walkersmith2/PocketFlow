@@ -52,6 +52,10 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
     }
   }
 
+  function handleHover() {
+    console.log('hover');
+  }
+
   return (
     <div className='budget-component'>
       <div className='component-heading-container'>
@@ -64,7 +68,7 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
           <div className='date-div'>
             <div className='date-heading-div'>
               <h2 className='date-heading'>{timePeriodFilter == 'month' ? dateFilter.toLocaleDateString('en-us', { month: 'long', year: 'numeric' }) : dateFilter.getFullYear()}</h2>
-              {isCurrentMonthOrYear() && <p className='date-subheading'>{`Days left in ${timePeriodFilter}: ${getDaysLeftInTimePeriod()}`}</p>}
+              <p className='date-subheading'>{isCurrentMonthOrYear() ? `Days left in ${timePeriodFilter}: ${getDaysLeftInTimePeriod()}` : ''}</p>
             </div>
             <div className='date-button-div'>
               <label title='Change time period between month and year' className='time-period-filter-toggle'>
@@ -81,7 +85,7 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
         </div>
       </div>
       <div className='budget-breakdown-table'>
-        <h3 className='heading'><span className='text-span'>Budget Breakdown <button className='info-button' ><InfoIcon /></button></span><button onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
+        <h3 className='heading'><span className='text-span'>Budget Breakdown </span><button onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
         <div className='scrollable-table'>
           <table className={isBreakdownVisible ? 'expanded' : ''}>
             <thead>
