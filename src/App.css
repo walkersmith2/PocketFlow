@@ -1272,8 +1272,8 @@ footer {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 .modal {
