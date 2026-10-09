@@ -18,17 +18,18 @@ function AddBudgetComponent({ categories, monthlyBudgets, addBudget, categoryBud
   useEffect(() => {
     const isMonth = timePeriodFilter === 'month';
     setTotalBudget(isMonth ? Number(monthlyBudgets[0]) || 0 : 0);
-
-    setCategoryPercentages(
-      Object.fromEntries(
-        categories.map((c) => {
-          const row = isMonth
-            ? categoryBudgets.find((r) => String(r.categoryId) === String(c.id))
-            : null;
-          return [c.id, Number(row?.amount) || 0];
-        })
-      )
-    );
+    if(isMonth) {
+      setCategoryPercentages(
+        Object.fromEntries(
+          categories.map((c) => {
+            const row = isMonth
+              ? categoryBudgets.find((r) => String(r.categoryId) === String(c.id))
+              : null;
+            return [c.id, Number(row?.amount) || 0];
+          })
+        )
+      );
+    }
   }, [dateFilter, timePeriodFilter, monthlyBudgets, categoryBudgets, categories]);
 
   useLayoutEffect(() => {
@@ -104,6 +105,7 @@ function AddBudgetComponent({ categories, monthlyBudgets, addBudget, categoryBud
           {isCurrentMonthOrYear() && <p className='date-subheading'>{`Days left in ${timePeriodFilter}: ${getDaysLeftInTimePeriod()}`}</p>}
         </div>
       </div>
+      {timePeriodFilter === 'year' && <p className='note-p'><b>Note:</b> You are currently setting a monthly budget for <b>all</b> months of the selected year. Clicking <b>Save</b> will overwrite any previous budgets set.</p>}
       <div className='budget-total-table'>
         <h3>1. Set Total Monthly Budget</h3>
         <div className='scrollable-table'>

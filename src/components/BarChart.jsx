@@ -79,8 +79,8 @@ function BarChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyB
               borderDash: [3, 6], // Optional: makes the line dashed
               label: {
                 display: true,
-                content: 'Budget',
-                position: 'end',
+                content: 'Monthly Budget',
+                position: 'start',
                 backgroundColor: budgetRemaining >= 0 ? underBudgetColor : overBudgetColor,
               },
             },

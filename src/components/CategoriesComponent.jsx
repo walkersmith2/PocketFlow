@@ -127,7 +127,7 @@ function CategoriesComponent({ expenses, categories, categoryFilter, setCategory
         </div>
         <p>{categories.length} categories</p>
         <div className="add-category-btn-container">
-          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>New Category</button>
+          <button type="button" className="show-add-category-component-btn" onClick={handleAddCategoryClick}>+ Add Category</button>
         </div>
       </div>
     </div>

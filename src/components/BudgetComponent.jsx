@@ -12,10 +12,10 @@ const rootStyles = window.getComputedStyle(document.body);
 const underBudgetColor = rootStyles.getPropertyValue('--under-budget').trim();
 const overBudgetColor = rootStyles.getPropertyValue('--over-budget').trim();
 
-function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthlyBudgetsTotal, budgetRemaining, timePeriodFilter, setTimePeriodFilter, dateFilter, setDateFilter, onEditBudget }) {
+function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthlyBudgetsTotal, budgetRemaining, timePeriodFilter, setTimePeriodFilter, dateFilter, setDateFilter, onEditBudget, isCurrentMonthOrYear }) {
   
   const [progressBarOuterWidth, setProgressBarOuterWidth] = useState(0);
-  const [isBreakdownVisible, setIsBreakdownVisible] = useState(false);
+  const [isBreakdownVisible, setIsBreakdownVisible] = useState(true);
   const progressBarRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -23,19 +23,6 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
       setProgressBarOuterWidth(progressBarRef.current.offsetWidth);
     }
   }, []);
-  
-  function isCurrentMonthOrYear() {
-    const today = new Date();
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
-    
-    if(timePeriodFilter === 'year') {
-      return currentYear === dateFilter.getFullYear();
-    }
-    else if(timePeriodFilter === 'month') {
-      return currentYear === dateFilter.getFullYear() && currentMonth === dateFilter.getMonth();
-    }
-  }
 
   function getDaysLeftInTimePeriod() {
     const today = new Date();
@@ -62,7 +49,7 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
         <div className='component-heading-div'>
           <h2 className='component-heading'>Total Spent: <span className={`total-spent-span ${budgetRemaining >= 0 ? 'under-budget-text' : 'over-budget-text'}`}>${visibleExpenses.reduce((sum, expense) => sum + expense.amount, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> of ${monthlyBudgetsTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
           <p className='total-spent-subheading'>{timePeriodFilter === 'month' && (<>You are <span className={budgetRemaining >= 0 ? 'under-budget-text' : 'over-budget-text'}>${Math.abs(budgetRemaining).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> {budgetRemaining >= 0 ? 'under' : 'over'} budget for this month.</>)}</p>
-          <button title='Edit Budget' className='edit-budget-btn' onClick={onEditBudget} disabled={timePeriodFilter === 'year'}><EditIcon className='edit-icon' />Edit Budget</button>
+          <button title='Edit Budget' className='edit-budget-btn' onClick={onEditBudget} ><EditIcon className='edit-icon' />Edit Budget</button>
         </div>
         <div>
           <div className='date-div'>
@@ -85,7 +72,7 @@ function BudgetComponent({ visibleExpenses, categories, categoryBudgets, monthly
         </div>
       </div>
       <div className='budget-breakdown-table'>
-        <h3 className='heading'><span className='text-span'>Budget Breakdown </span><button onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
+        <h3 className='heading'><span className='text-span'>Budget Breakdown </span><button title='Click to expand table' onClick={() => setIsBreakdownVisible(prev => !prev)}><CaretDownIcon className={`caret-down-icon ${isBreakdownVisible ? 'expanded' : ''}`} /></button></h3>
         <div className='scrollable-table'>
           <table className={isBreakdownVisible ? 'expanded' : ''}>
             <thead>

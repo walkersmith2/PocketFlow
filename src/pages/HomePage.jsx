@@ -89,7 +89,7 @@ function HomePage() {
   useEffect(() => {setIsBudgetEditable(false)}, [dateFilter, timePeriodFilter]);
 
   const formattedDateFilter = useMemo(() => {
-    return `${dateFilter.getFullYear()}-${String(dateFilter.getMonth() + 1).padStart(2, '0')}-01`;
+    return formatDate(dateFilter);
   }, [dateFilter]);
 
   const monthlyBudgets = useMemo(() => {
@@ -207,12 +207,20 @@ function HomePage() {
   }
 
   async function addBudget(month, amount) {
-    const monthKey = typeof month === 'string' ? month : formattedDateFilter;
-
+    let rows = [];
+    if(timePeriodFilter === 'month') {
+      const monthKey = typeof month === 'string' ? month : formattedDateFilter;
+      rows.push({ month: monthKey, amount: Number(amount) || 0 });
+    }
+    else if(timePeriodFilter === 'year') {
+      const year = dateFilter.getFullYear();
+      rows = Array.from({ length: 12 }, (_, index) => ({ month: formatDate(new Date(dateFilter.getFullYear(), index, 1)), amount: Number(amount) || 0 }));
+    }
+    
     const { data, error } = await supabase
       .from('monthly_budgets')
       .upsert(
-      { month: monthKey, amount: Number(amount) || 0 },
+      rows,
       { onConflict: 'user_id,month' }
     );
 
@@ -220,7 +228,7 @@ function HomePage() {
       console.error(error);
       return;
     }
-
+    
     getAllMonthlyBudgets();
   }
 
@@ -250,6 +258,23 @@ function HomePage() {
 
     await getAllCategoryBudgets();
     return true;
+  }
+
+  function formatDate(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
+  }
+
+  function isCurrentMonthOrYear() {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    if(timePeriodFilter === 'year') {
+      return currentYear === dateFilter.getFullYear();
+    }
+    else if(timePeriodFilter === 'month') {
+      return currentYear === dateFilter.getFullYear() && currentMonth === dateFilter.getMonth();
+    }
   }
 
   function handleEditBudgetClick() {
@@ -380,11 +405,11 @@ function HomePage() {
       </header>
       <main className='homepage-main'>
         <div className='chart-view-container'>
-          <BudgetComponent visibleExpenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} dateFilter={dateFilter} setDateFilter={setDateFilter} onEditBudget={() => setIsAddBudgetComponentOpen(true)} />
+          <BudgetComponent visibleExpenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} timePeriodFilter={timePeriodFilter} setTimePeriodFilter={setTimePeriodFilter} dateFilter={dateFilter} setDateFilter={setDateFilter} onEditBudget={() => setIsAddBudgetComponentOpen(true)} isCurrentMonthOrYear={isCurrentMonthOrYear} />
           <div className='chart-container'>
             {activeChartView ==='pie' && <PieChart expenses={visibleExpenses} categories={categories} monthlyBudgetsTotal={monthlyBudgetsTotal} />}
             {activeChartView ==='bar' && <BarChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} categoryBudgets={categoryBudgets} />}
-            {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining} />}
+            {activeChartView ==='line' && <LineChart expenses={visibleExpenses} categories={categories} dateFilter={dateFilter} timePeriodFilter={timePeriodFilter} monthlyBudgets={monthlyBudgets} monthlyBudgetsTotal={monthlyBudgetsTotal} budgetRemaining={budgetRemaining}  isCurrentMonthOrYear={isCurrentMonthOrYear}/>}
           </div>
           <div className="chart-view-toggle">
             <div className="toggle-icons-container">

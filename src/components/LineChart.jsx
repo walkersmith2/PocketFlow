@@ -25,7 +25,7 @@ const lineColor = rootStyles.getPropertyValue('--text').trim();
 const underBudgetColor = rootStyles.getPropertyValue('--under-budget').trim();
 const overBudgetColor = rootStyles.getPropertyValue('--over-budget').trim();
 
-function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyBudgets, monthlyBudgetsTotal, budgetRemaining }) {
+function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthlyBudgets, monthlyBudgetsTotal, budgetRemaining, isCurrentMonthOrYear }) {
 
   const options = {
     maintainAspectRatio: false,
@@ -74,8 +74,8 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
               borderDash: [3, 6], // Optional: makes the line dashed
               label: {
                 display: true,
-                content: 'Budget',
-                position: 'end',
+                content: 'Monthly Budget',
+                position: 'start',
                 backgroundColor: budgetRemaining >= 0 ? underBudgetColor : overBudgetColor,
               },
             },
@@ -119,23 +119,41 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
       }
     );
 
+    let stopAtCurrentDate = false;
+    
+    const getDayOfYear = (date) => {
+      return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+    };
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (isCurrentMonthOrYear() === true) {
+      const hasFutureExpenses = expenses.some((expense) => new Date(expense.date + "T00:00:00") > today);
+      stopAtCurrentDate = !hasFutureExpenses;
+    }
+
+    const totalDataset = datasets.find((dataset) => dataset.id === -1);
+
     if(timePeriodFilter === "month") {
-      const daysInCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+      const daysInCurrentMonth = new Date(dateFilter.getFullYear(), dateFilter.getMonth() + 1, 0).getDate();
       labels = Array.from({ length: daysInCurrentMonth }, (_, index) => index + 1);
       let runningTotal = 0;
       labels.forEach((day, index) => {
         const currentDayExpenses = expenses.filter((expense) => {
           const expenseDate = new Date(expense.date + "T00:00:00");
           const dayOfMonth = expenseDate.getDate();
-          return dayOfMonth === day;
+          return dayOfMonth === index;
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
         runningTotal += expensesTotal;
+        
         datasets.find((dataset) => dataset.id === -1).data[index] = runningTotal;
+        const cellDate = new Date(dateFilter.getFullYear(), dateFilter.getMonth(), day);
+        totalDataset.data[index] = stopAtCurrentDate && cellDate > today ? null : runningTotal;
       });
     }
     if(timePeriodFilter === "year") {
-      const year = new Date().getFullYear();
+      const year = dateFilter.getFullYear();
       const daysInCurrentYear = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
       let runningTotal = 0;
       labels = Array.from({ length: daysInCurrentYear }, (_, index) => {
@@ -150,7 +168,9 @@ function LineChart({ expenses, categories, dateFilter, timePeriodFilter, monthly
         });
         const expensesTotal = currentDayExpenses.reduce((total, expense) => total + expense.amount, 0);
         runningTotal += expensesTotal;
-        datasets.find((dataset) => dataset.id === -1).data[index] = runningTotal;
+
+        const cellDate = new Date(year, 0, index + 1);
+        totalDataset.data[index] = stopAtCurrentDate && cellDate > today ? null : runningTotal;
       });
     }
 
